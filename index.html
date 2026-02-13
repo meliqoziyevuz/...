@@ -3,84 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meliqoziyev | Portfolio</title>
+    <title>Meliqoziyev | Terminal</title>
+    <script src="https://unpkg.com/@lyket/widget@latest/dist/lyket.js?apiKey=pt_5b76c8c49e798795624"></script>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #0f172a; color: white; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; }
-        .container { max-width: 450px; width: 100%; }
-        .card { background: #1e293b; padding: 25px; border-radius: 24px; text-align: center; border: 1px solid #334155; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        h1 { color: #38bdf8; margin: 0; font-size: 26px; }
+        :root { --bg: #0f172a; --card: #1e293b; --text: #38bdf8; --dim: #94a3b8; }
+        body { font-family: 'Courier New', monospace; background-color: var(--bg); color: white; margin: 0; display: flex; flex-direction: column; align-items: center; padding: 20px; }
+        .container { max-width: 400px; width: 100%; }
         
-        /* Layk tugmasi */
-        .like-section { display: inline-flex; align-items: center; gap: 8px; background: #334155; padding: 8px 18px; border-radius: 30px; cursor: pointer; margin: 15px 0; border: 1px solid #475569; }
-        .heart { font-size: 20px; color: #94a3b8; }
-        .heart.liked { color: #ef4444; }
-
-        .btn { display: block; background: #38bdf8; color: #0f172a; text-decoration: none; padding: 14px; border-radius: 15px; font-weight: bold; text-align: center; }
-        .section-title { width: 100%; text-align: left; font-size: 18px; color: #38bdf8; margin: 25px 0 12px 0; border-bottom: 1px solid #334155; padding-bottom: 8px; font-weight: bold; }
-        .item-box { background: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: flex; justify-content: space-between; border: 1px solid #334155; }
-
-        /* Yutuqlar va Kinolar */
-        .gallery { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .gallery-item { background: #1e293b; border-radius: 15px; padding: 10px; border: 1px solid #334155; text-align: center; text-decoration: none; color: white; }
-        .gallery-item img { width: 100%; border-radius: 10px; }
+        /* Yuqori ma'lumotlar paneli */
+        .system-meta { font-size: 11px; color: var(--text); display: flex; justify-content: space-between; margin-bottom: 10px; opacity: 0.8; width: 100%; }
         
-        .movie-box { display: flex; align-items: center; gap: 15px; background: #1e293b; padding: 12px; border-radius: 15px; margin-bottom: 10px; border: 1px solid #334155; }
-        .footer { margin-top: 40px; font-size: 12px; color: #475569; }
+        /* Terminal karta */
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border-left: 4px solid var(--text); box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 20px; position: relative; overflow: hidden; }
+        .card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 2px; background: linear-gradient(90deg, transparent, var(--text), transparent); animation: scan 3s linear infinite; }
+        @keyframes scan { 0% { left: -100%; } 100% { left: 100%; } }
+
+        h1 { font-size: 24px; margin: 0; color: var(--text); }
+        
+        /* Typing effect */
+        .typing { border-right: 2px solid var(--text); white-space: nowrap; overflow: hidden; animation: typing 3.5s steps(30, end), blink .5s step-end infinite; font-size: 14px; color: var(--dim); display: inline-block; margin-top: 5px; }
+        @keyframes typing { from { width: 0 } to { width: 100% } }
+        @keyframes blink { from, to { border-color: transparent } 50% { border-color: var(--text) } }
+
+        .btn { display: block; background: var(--text); color: var(--bg); text-decoration: none; padding: 12px; border-radius: 8px; font-weight: bold; text-align: center; margin-top: 20px; transition: 0.3s; letter-spacing: 1px; }
+        .btn:hover { background: #7dd3fc; transform: scale(1.02); }
+
+        .section-title { font-size: 13px; color: var(--text); margin: 20px 0 10px 0; font-weight: bold; text-transform: uppercase; border-bottom: 1px solid #334155; padding-bottom: 5px; }
+        .item-box { background: var(--card); padding: 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; border: 1px solid #334155; font-size: 13px; }
+
+        .bottom-like { margin-top: 30px; padding: 15px; text-align: center; }
+        .footer { font-size: 10px; color: #475569; text-align: center; margin-top: 15px; line-height: 1.5; }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <div class="system-meta">
+            <span id="user-ip">IP: Loading...</span>
+            <span id="live-clock">00:00:00</span>
+        </div>
+        
         <div class="card">
             <h1>Meliqoziyev.uz</h1>
-            <p style="color:#94a3b8; font-size:14px;">Cyber Security Specialist</p>
-            <div class="like-section" onclick="toggleLike()">
-                <span id="heart-icon" class="heart">❤</span>
-                <span id="like-count">0</span> ta layk
-            </div>
-            <a href="https://t.me/Pain_2007" class="btn">Telegram orqali bog'lanish</a>
+            <div class="typing">Cyber Security Specialist_</div>
+            <a href="https://t.me/Pain_2007" class="btn">INITIALIZE CONTACT</a>
         </div>
 
-        <div class="section-title">Bilimlarim (Skills)</div>
-        <div class="item-box"><span>HTML / CSS</span> <span>80%</span></div>
-        <div class="item-box"><span>Kiber xavfsizlik</span> <span>Tayyorlanmoqda</span></div>
+        <div class="section-title">System Skills</div>
+        <div class="item-box"><span>Ethical Hacking</span> <span style="color: var(--text);">Learning</span></div>
+        <div class="item-box"><span>Linux / Bash</span> <span style="color: var(--text);">Advanced</span></div>
+        <div class="item-box"><span>Frontend Dev</span> <span style="color: var(--text);">Active</span></div>
 
-        <div class="section-title">Mening yutuqlarim</div>
-        <div class="gallery">
-            <div class="gallery-item"><img src="IMG_20260128_181920.jpg" alt="1"><span>Sertifikat</span></div>
-            <div class="gallery-item"><img src="IMG_20260128_182125.jpg" alt="2"><span>Sertifikat</span></div>
+        <div class="bottom-like">
+            <div data-lyket-type="like" data-lyket-id="meliqoziyev-terminal-v3" data-lyket-color-text="#94a3b8"></div>
         </div>
 
-        <div class="section-title">Ko'rgan kinolarim</div>
-        <div class="movie-box"><span>💻</span> Mr. Robot (IMDB: 8.5)</div>
-        <div class="movie-box"><span>🎭</span> Who Am I (IMDB: 7.5)</div>
-        <div class="movie-box"><span>🕶</span> Matrix (IMDB: 8.7)</div>
-
-        <div class="footer">© 2026 Meliqoziyev. Barcha huquqlar himoyalangan.</div>
+        <div class="footer">
+            [STATUS: ENCRYPTED]<br>
+            © 2026 Meliqoziyev. Built for Security.
+        </div>
     </div>
 
     <script>
-        let count = parseInt(localStorage.getItem('likeCount')) || 0;
-        let isLiked = localStorage.getItem('isLiked') === 'true';
-        document.getElementById('like-count').innerText = count;
-        if(isLiked) document.getElementById('heart-icon').classList.add('liked');
-
-        function toggleLike() {
-            let countElement = document.getElementById('like-count');
-            let heart = document.getElementById('heart-icon');
-            if(!isLiked) {
-                count++;
-                isLiked = true;
-                heart.classList.add('liked');
-            } else {
-                count--;
-                isLiked = false;
-                heart.classList.remove('liked');
-            }
-            localStorage.setItem('likeCount', count);
-            localStorage.setItem('isLiked', isLiked);
-            countElement.innerText = count;
+        // 1. Jonli soat funksiyasi
+        function updateClock() {
+            const now = new Date();
+            const timeStr = now.getHours().toString().padStart(2, '0') + ":" + 
+                            now.getMinutes().toString().padStart(2, '0') + ":" + 
+                            now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('live-clock').innerText = timeStr;
         }
+        setInterval(updateClock, 1000);
+        updateClock();
+
+        // 2. IP manzilni aniqlash
+        fetch('https://api.ipify.org?format=json')
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('user-ip').innerText = "IP: " + data.ip;
+            })
+            .catch(() => {
+                document.getElementById('user-ip').innerText = "IP: 127.0.0.1 (Local)";
+            });
     </script>
 </body>
 </html>
