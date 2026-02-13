@@ -16,6 +16,7 @@
             justify-content: center;
             min-height: 100vh;
             overflow: hidden;
+            touch-action: none;
         }
 
         #effect-canvas {
@@ -63,26 +64,18 @@
             min-height: 25px;
         }
 
-        .quote {
-            font-size: 15px;
-            color: #8b949e;
-            line-height: 1.6;
-            margin-bottom: 40px;
-        }
-
-        /* BOG'LANISH TUGMASI */
         .card { 
             background: rgba(255, 255, 255, 0.03); 
             border: 1px solid #30363d; 
             border-radius: 12px; 
             padding: 18px; 
-            margin-top: 20px;
+            margin-top: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
             color: #fff;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 600;
             transition: 0.3s;
             gap: 10px;
@@ -90,12 +83,10 @@
 
         .card:hover { 
             border-color: #58a6ff; 
-            background: rgba(88, 166, 255, 0.05);
+            background: rgba(88, 166, 255, 0.08);
             transform: translateY(-2px); 
         }
 
-        /* LIKE BUTTON */
-        .like-section { margin-top: 50px; }
         .like-pill {
             display: inline-flex;
             align-items: center;
@@ -105,17 +96,10 @@
             padding: 12px 28px;
             border-radius: 30px;
             cursor: pointer;
-            transition: 0.3s;
+            margin-top: 40px;
         }
-        .like-pill:active { transform: scale(0.9); }
-        .heart-icon { color: #ed4956; font-size: 22px; }
-        .like-count { font-weight: 700; font-size: 20px; }
 
-        .footer-text {
-            margin-top: 60px;
-            font-size: 11px;
-            color: #484f58;
-        }
+        .footer-text { margin-top: 50px; font-size: 11px; color: #484f58; }
     </style>
 </head>
 <body>
@@ -132,102 +116,105 @@
         <h1>meliqoziyev.uz</h1>
         <div id="typing"></div>
         
-        <p class="quote">
-            Ba'zilar muammoni ko'radi, men esa uning yechimini <br>
-            <span style="border-bottom: 2px solid #58a6ff; color: #fff;">kod bilan</span> yozaman.
-        </p>
-
         <a href="https://t.me/Pain_2007" target="_blank" class="card">
             <span>✈️</span>
             <span>Bog'lanish</span>
         </a>
 
-        <div class="like-section">
-            <div class="like-pill" onclick="handleLike()">
-                <span class="heart-icon">❤️</span>
-                <span class="like-count" id="count">350</span>
-            </div>
+        <a href="https://youtube.com/@uzclaver_official" target="_blank" class="card">
+            <span style="color: #ff0000;">▶️</span>
+            <span>Ilk hamkorim: UzClaver</span>
+        </a>
+
+        <div class="like-pill" onclick="handleLike()">
+            <span style="color: #ed4956; font-size: 22px;">❤️</span>
+            <span id="count" style="font-weight: 700; font-size: 20px;">350</span>
         </div>
 
-        <div class="footer-text">
-            © 2026 meliqoziyev.uz | Built with 💻
-        </div>
+        <div class="footer-text">© 2026 meliqoziyev.uz</div>
     </div>
 
     <script>
+        // --- 1. SOAT VA IP ---
+        setInterval(() => { document.getElementById('time-display').innerText = new Date().toLocaleTimeString(); }, 1000);
+        fetch('https://api.ipify.org?format=json').then(res => res.json()).then(data => document.getElementById('ip-display').innerText = "IP: " + data.ip);
+
+        // --- 2. TYPING EFFECT ---
         const text = "Cyber Security Specialist_";
-        let i = 0;
+        let idx = 0;
         function type() {
-            if (i < text.length) {
-                document.getElementById("typing").innerHTML += text.charAt(i);
-                i++; setTimeout(type, 120);
+            if (idx < text.length) {
+                document.getElementById("typing").innerHTML += text.charAt(idx);
+                idx++; setTimeout(type, 120);
             }
         }
+        type();
 
-        setInterval(() => {
-            document.getElementById('time-display').innerText = new Date().toLocaleTimeString();
-        }, 1000);
-
-        fetch('https://api.ipify.org?format=json')
-            .then(res => res.json())
-            .then(data => document.getElementById('ip-display').innerText = "IP: " + data.ip);
-
-        let liked = false;
-        function handleLike() {
-            if(!liked) {
-                const countEl = document.getElementById('count');
-                countEl.innerText = parseInt(countEl.innerText) + 1;
-                liked = true;
-                for(let i=0; i<15; i++) particles.push(new Particle(window.innerWidth/2, window.innerHeight - 100));
-            }
-        }
-
+        // --- 3. QOR VA QOR SACHRASH ---
         const canvas = document.getElementById('effect-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        let particles = [];
         let snow = [];
+        let splashes = [];
 
-        class Snow {
+        class SnowNode {
             constructor() { this.reset(); this.y = Math.random() * canvas.height; }
-            reset() { this.x = Math.random() * canvas.width; this.y = -10; this.size = Math.random() * 2 + 1; this.speed = Math.random() * 0.7 + 0.3; }
-            update() { this.y += this.speed; if(this.y > canvas.height) this.reset(); }
-            draw() { ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); }
+            reset() { 
+                this.x = Math.random() * canvas.width; 
+                this.y = -10; 
+                this.size = Math.random() * 3 + 1; 
+                this.speed = Math.random() * 1 + 0.5; 
+                this.opacity = Math.random() * 0.5 + 0.3;
+            }
+            update() { this.y += this.speed; if (this.y > canvas.height) this.reset(); }
+            draw() { 
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`; 
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill(); 
+            }
         }
 
-        class Particle {
-            constructor(x, y) { 
-                this.x = x; this.y = y; 
-                this.size = Math.random() * 4 + 2; 
-                this.vX = Math.random() * 6 - 3; 
-                this.vY = Math.random() * 6 - 3; 
-                this.alpha = 1; 
-                this.color = `hsl(${Math.random()*360}, 80%, 60%)`; 
+        class SnowSplash {
+            constructor(x, y) {
+                this.x = x; this.y = y;
+                this.size = Math.random() * 3 + 1;
+                this.vX = Math.random() * 4 - 2;
+                this.vY = Math.random() * 4 - 2;
+                this.alpha = 1;
             }
             update() { this.x += this.vX; this.y += this.vY; this.alpha -= 0.02; }
-            draw() { ctx.globalAlpha = this.alpha; ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+            draw() {
+                ctx.globalAlpha = this.alpha;
+                ctx.fillStyle = "#ffffff";
+                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI*2); ctx.fill();
+                ctx.globalAlpha = 1;
+            }
         }
 
-        for(let i=0; i<60; i++) snow.push(new Snow());
+        for(let i=0; i<100; i++) snow.push(new SnowNode());
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             snow.forEach(s => { s.update(); s.draw(); });
-            particles.forEach((p, index) => {
+            splashes.forEach((p, index) => {
                 p.update(); p.draw();
-                if(p.alpha <= 0) particles.splice(index, 1);
+                if(p.alpha <= 0) splashes.splice(index, 1);
             });
             requestAnimationFrame(animate);
         }
+        animate();
 
-        window.addEventListener('mousedown', (e) => {
-            for(let i=0; i<12; i++) particles.push(new Particle(e.clientX, e.clientY));
+        window.addEventListener('pointerdown', (e) => {
+            for(let i=0; i<10; i++) splashes.push(new SnowSplash(e.clientX, e.clientY));
         });
 
-        type();
-        animate();
+        function handleLike() {
+            const countEl = document.getElementById('count');
+            countEl.innerText = parseInt(countEl.innerText) + 1;
+            for(let i=0; i<15; i++) splashes.push(new SnowSplash(window.innerWidth/2, window.innerHeight/2 + 100));
+        }
+
         window.onresize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     </script>
 </body>
