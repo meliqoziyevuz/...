@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meliqoziyev | Portfolio</title>
+    <title>Meliqoziyev | Dynamic Cyber Portfolio</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
             margin: 0;
             font-family: 'Segoe UI', sans-serif;
-            background-color: #0d1117;
+            background-color: #080a0f;
             color: #ffffff;
             display: flex;
             justify-content: center;
@@ -27,52 +27,72 @@
             z-index: 0;
         }
 
+        /* --- DINAMIK SOAT RAMKASI --- */
+        .cyber-clock-container {
+            position: fixed;
+            top: 25px;
+            right: 25px;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #30363d;
+            z-index: 10;
+            clip-path: polygon(0 0, 100% 0, 100% 70%, 85% 100%, 0 100%);
+            transition: border-color 1s ease;
+        }
+
+        .time-val {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 26px;
+            font-weight: bold;
+            display: block;
+            transition: color 1s ease, text-shadow 1s ease;
+        }
+
+        .date-val {
+            font-size: 9px;
+            color: #8b949e;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* --- ASOSIY KONTEYNER --- */
         .container { 
             width: 90%; 
             max-width: 400px; 
             text-align: center; 
-            padding-top: 50px;
+            padding-top: 100px;
             z-index: 1;
         }
 
-        /* ANTIQA KATTA SOAT */
-        .neon-clock {
-            font-family: 'Courier New', monospace;
-            font-size: 55px;
-            font-weight: 900;
-            color: #58a6ff;
-            text-shadow: 0 0 20px rgba(88, 166, 255, 0.8);
-            margin-bottom: 5px;
-            letter-spacing: 3px;
-        }
-
-        .ip-info {
+        .ip-box {
             font-family: monospace;
-            font-size: 13px;
-            color: #8b949e;
-            margin-bottom: 30px;
+            font-size: 11px;
+            color: #58a6ff;
+            margin-bottom: 25px;
+            opacity: 0.7;
         }
 
         .avatar-box { 
-            width: 100px; height: 100px; 
-            background: rgba(255, 255, 255, 0.05); 
-            border-radius: 50%; 
-            margin: 0 auto 15px; 
+            width: 110px; height: 110px; 
+            background: rgba(255, 255, 255, 0.03); 
+            border-radius: 20px;
+            margin: 0 auto 20px; 
             display: flex; align-items: center; justify-content: center; 
-            font-size: 45px; 
-            border: 2px solid #30363d;
+            font-size: 50px; 
+            border: 1px solid #30363d;
+            transform: rotate(-3deg);
         }
 
-        h1 { font-size: 30px; letter-spacing: -1px; margin-bottom: 5px; }
+        h1 { font-size: 32px; font-weight: 800; margin-bottom: 5px; }
         
-        #typing { color: #58a6ff; font-weight: 600; font-size: 18px; min-height: 25px; margin-bottom: 30px; }
+        #typing { color: #58a6ff; font-family: monospace; font-size: 17px; margin-bottom: 40px; height: 20px; }
 
         .card { 
-            background: rgba(255, 255, 255, 0.03); 
+            background: rgba(255, 255, 255, 0.02); 
             border: 1px solid #30363d; 
-            border-radius: 12px; 
+            border-radius: 10px; 
             padding: 18px; 
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -80,44 +100,41 @@
             color: #fff;
             font-weight: 600;
             transition: 0.3s;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .card:hover { border-color: #58a6ff; background: rgba(88, 166, 255, 0.05); }
+        .card:hover { border-color: #58a6ff; background: rgba(88, 166, 255, 0.05); transform: translateX(5px); }
 
-        /* CHAP TARAFIY YURAK */
-        .bottom-left-like {
+        /* --- CHAP TARAFIY YURAK --- */
+        .heart-btn {
             position: fixed;
-            bottom: 25px;
-            left: 25px;
+            bottom: 30px;
+            left: 30px;
             display: flex;
             align-items: center;
             gap: 10px;
-            background: rgba(255, 255, 255, 0.07);
+            background: #161b22;
             border: 1px solid #30363d;
-            padding: 10px 15px;
-            border-radius: 50px;
+            padding: 12px 18px;
+            border-radius: 12px;
             cursor: pointer;
             z-index: 10;
-            animation: heartBeat 2s infinite;
         }
 
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); box-shadow: 0 0 15px rgba(237, 73, 86, 0.3); }
-            100% { transform: scale(1); }
-        }
-
-        .footer { margin-top: 40px; font-size: 11px; color: #484f58; }
+        .footer-txt { margin-top: 50px; font-size: 10px; color: #484f58; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
     <canvas id="effect-canvas"></canvas>
 
+    <div class="cyber-clock-container" id="clock-box">
+        <span class="date-val">Minute Shift</span>
+        <span class="time-val" id="clock">00:00:00</span>
+    </div>
+
     <div class="container">
-        <div class="neon-clock" id="clock">00:00</div>
-        <div class="ip-info" id="ip">IP: Detecting...</div>
+        <div class="ip-box" id="ip">ENCRYPTED_ID...</div>
 
         <div class="avatar-box">🥷</div>
         <h1>meliqoziyev.uz</h1>
@@ -125,45 +142,66 @@
         
         <a href="https://t.me/Pain_2007" target="_blank" class="card">
             <span>✈️</span>
-            <span>Bog'lanish</span>
+            <span>BOG'LANISH</span>
         </a>
 
         <a href="https://youtube.com/@uzclaver_official" target="_blank" class="card">
             <span style="color: #ff0000;">▶️</span>
-            <span>Ilk hamkorim: UzClaver</span>
+            <span>ILK HAMKORIM: UzClaver</span>
         </a>
 
-        <div class="footer">© 2026 meliqoziyev.uz</div>
+        <div class="footer-txt">PORTFOLIO v4.0 // 2026</div>
     </div>
 
-    <div class="bottom-left-like" onclick="handleLike()">
-        <span style="font-size: 20px;">❤️</span>
-        <span id="like-count" style="font-weight: bold;">350</span>
+    <div class="heart-btn" onclick="handleLike()">
+        <span style="color: #ed4956; font-size: 20px;">❤️</span>
+        <span id="like-count" style="font-weight: bold;">352</span>
     </div>
 
     <script>
-        // SOAT VA IP
-        function updateTime() {
-            const now = new Date();
-            document.getElementById('clock').innerText = 
-                String(now.getHours()).padStart(2, '0') + ":" + 
-                String(now.getMinutes()).padStart(2, '0');
-        }
-        setInterval(updateTime, 1000); updateTime();
-        fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => document.getElementById('ip').innerText = "SYSTEM IP: " + d.ip);
+        // 1. HAR MINUTDA O'ZGARUVCHI RANG KODI
+        const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#00ffff', '#ff00ff', '#58a6ff', '#ffa500'];
+        let lastMinute = -1;
 
-        // YOZILISH EFFEKTI
-        const txt = "Cyber Security Specialist_";
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            
+            const clockEl = document.getElementById('clock');
+            const currentMinute = now.getMinutes();
+
+            // Agar yangi minut kirsa rangni o'zgartir
+            if (currentMinute !== lastMinute) {
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                clockEl.style.color = randomColor;
+                clockEl.style.textShadow = `0 0 15px ${randomColor}`;
+                document.getElementById('clock-box').style.borderColor = randomColor;
+                lastMinute = currentMinute;
+            }
+
+            clockEl.innerText = `${h}:${m}:${s}`;
+        }
+        setInterval(updateClock, 1000); updateClock();
+
+        // 2. IP MANZIL
+        fetch('https://api.ipify.org?format=json').then(r => r.json()).then(d => {
+            document.getElementById('ip').innerText = "SYSTEM_NODE: " + d.ip;
+        });
+
+        // 3. YOZILISH EFFEKTI
+        const txt = "> Cyber Security Specialist";
         let i = 0;
         function type() {
             if(i < txt.length) {
                 document.getElementById('typing').innerHTML += txt.charAt(i);
-                i++; setTimeout(type, 120);
+                i++; setTimeout(type, 100);
             }
         }
         type();
 
-        // QOR VA SACHRASH
+        // 4. QOR VA SACHRASH
         const canvas = document.getElementById('effect-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -173,9 +211,9 @@
 
         class Snow {
             constructor() { this.reset(); this.y = Math.random() * canvas.height; }
-            reset() { this.x = Math.random() * canvas.width; this.y = -10; this.sz = Math.random() * 3 + 1; this.sp = Math.random() * 1 + 0.5; }
+            reset() { this.x = Math.random() * canvas.width; this.y = -10; this.sz = Math.random() * 2 + 1; this.sp = Math.random() * 1 + 0.4; }
             update() { this.y += this.sp; if(this.y > canvas.height) this.reset(); }
-            draw() { ctx.fillStyle = "rgba(255,255,255,0.4)"; ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill(); }
+            draw() { ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill(); }
         }
 
         class Splash {
@@ -184,7 +222,7 @@
             draw() { ctx.globalAlpha = this.a; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1; }
         }
 
-        for(let j=0; j<100; j++) snow.push(new Snow());
+        for(let j=0; j<70; j++) snow.push(new Snow());
 
         function loop() {
             ctx.clearRect(0,0, canvas.width, canvas.height);
