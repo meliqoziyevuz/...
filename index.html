@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meliqoziyev | Security Portfolio</title>
+    <title>Meliqoziyev | Cyber Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -14,9 +15,9 @@
             color: #ffffff;
             display: flex;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
-            padding-bottom: 50px;
+            overflow: hidden;
         }
 
         #effect-canvas {
@@ -27,27 +28,7 @@
             z-index: 0;
         }
 
-        #alert-overlay {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(255, 0, 0, 0.2);
-            z-index: 1000;
-            display: none;
-            pointer-events: none;
-            animation: flash 0.3s infinite;
-        }
-
-        @keyframes flash { 0%, 100% { opacity: 0; } 50% { opacity: 1; } }
-
-        .container { 
-            width: 90%; 
-            max-width: 450px; 
-            text-align: center; 
-            padding: 80px 0 30px;
-            z-index: 1;
-        }
-
+        /* --- CLOCK --- */
         .cyber-clock {
             position: fixed;
             top: 20px;
@@ -58,52 +39,56 @@
             font-size: 18px;
             font-weight: bold;
             z-index: 10;
-            transition: 0.5s;
         }
 
+        .container { 
+            width: 90%; 
+            max-width: 400px; 
+            text-align: center; 
+            z-index: 1;
+        }
+
+        /* --- AVATAR --- */
         .avatar-box { 
-            width: 120px; height: 120px; 
-            background: rgba(255, 255, 255, 0.03); 
-            border-radius: 20px;
-            margin: 0 auto 15px; 
-            border: 1px solid #30363d;
+            width: 110px; height: 110px; 
+            background: rgba(255, 255, 255, 0.05); 
+            border-radius: 50%;
+            margin: 0 auto 20px; 
+            border: 2px solid #30363d;
             overflow: hidden;
-            cursor: pointer;
-            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        h1 { font-size: 26px; margin-bottom: 5px; letter-spacing: -1px; }
-        #typing { color: #58a6ff; font-size: 14px; margin-bottom: 25px; min-height: 20px; }
+        h1 { font-size: 24px; margin-bottom: 5px; }
+        #typing { color: #58a6ff; font-size: 14px; margin-bottom: 30px; min-height: 20px; }
 
-        .info-block {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid #30363d;
-            border-radius: 12px;
-            padding: 15px;
-            text-align: left;
-            margin-bottom: 12px;
-        }
-
+        /* --- TUGMALAR --- */
         .card { 
             background: #161b22; 
             border: 1px solid #30363d; 
             border-radius: 10px; 
-            padding: 14px; 
-            margin-bottom: 10px;
+            padding: 15px; 
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
             text-decoration: none;
             color: #fff;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 14px;
             transition: 0.3s;
-            gap: 10px;
+            gap: 12px;
         }
-        .card:hover { border-color: #58a6ff; transform: translateX(5px); }
 
-        .insta:hover { border-color: #e4405f; background: rgba(228, 64, 95, 0.1); }
+        .card i { font-size: 18px; }
+        .fa-instagram { color: #e4405f; }
+        .fa-telegram { color: #24A1DE; }
+        .fa-youtube { color: #FF0000; }
+
+        .card:hover { border-color: #58a6ff; background: rgba(88, 166, 255, 0.05); }
 
         .heart-btn {
             position: fixed;
@@ -116,7 +101,6 @@
             border: 1px solid #30363d;
             padding: 10px 18px;
             border-radius: 50px;
-            cursor: pointer;
             z-index: 10;
         }
     </style>
@@ -124,114 +108,68 @@
 <body>
 
     <canvas id="effect-canvas"></canvas>
-    <div id="alert-overlay"></div>
 
     <div class="cyber-clock" id="clock-box">
         <span id="clock">00:00:00</span>
     </div>
 
     <div class="container">
-        <div class="avatar-box" onclick="triggerAccessDenied()">
-            <img src="https://via.placeholder.com/150" alt="Meliqoziyev">
+        <div class="avatar-box">
+             <img src="https://via.placeholder.com/150" alt="Meliqoziyev">
         </div>
 
         <h1>meliqoziyev.uz</h1>
         <div id="typing"></div>
 
-        <div class="info-block">
-            <span style="font-size: 10px; color: #8b949e; letter-spacing: 2px;">TECHNICAL STATUS</span>
-            <p style="font-size: 12px; line-height: 1.6; margin-top: 5px;">
-                [+] Penetration Testing<br>
-                [+] System Security<br>
-                [+] Python Automation
-            </p>
-        </div>
-
-        <a href="https://www.instagram.com/ezz_mafiya/" target="_blank" class="card insta">
-            <span>📸</span> Instagram: @ezz_mafiya
+        <a href="https://www.instagram.com/ezz_mafiya/" target="_blank" class="card">
+            <i class="fab fa-instagram"></i> Instagram
         </a>
 
         <a href="https://t.me/Pain_2007" target="_blank" class="card">
-            <span>✈️</span> Telegram Kontakt
+            <i class="fab fa-telegram"></i> Telegram
         </a>
 
         <a href="https://youtube.com/@uzclaver_official" target="_blank" class="card">
-            <span style="color: red;">▶️</span> Ilk Hamkorim: UzClaver
+            <i class="fab fa-youtube"></i> UzClaver
         </a>
 
-        <p style="font-size: 10px; color: #484f58; margin-top: 30px;">SECURE_CONNECTION_v6.2</p>
+        <p style="font-size: 9px; color: #484f58; margin-top: 20px;">© 2026 meliqoziyev.uz</p>
     </div>
 
-    <div class="heart-btn" onclick="handleLike()">
-        <span>❤️</span><span id="like-count">352</span>
+    <div class="heart-btn">
+        <span>❤️</span><span id="like-count">358</span>
     </div>
 
     <script>
-        // HAR MINUTDA RANG O'ZGARISHI
-        const colors = ['#ff4a4a', '#00ff00', '#00ffff', '#ffff00', '#58a6ff', '#ff00ff'];
-        let lastMin = -1;
+        // SOAT
         function updateClock() {
-            const now = new Date();
-            if (now.getMinutes() !== lastMin) {
-                const c = colors[Math.floor(Math.random() * colors.length)];
-                document.getElementById('clock-box').style.color = c;
-                document.getElementById('clock-box').style.borderColor = c;
-                lastMin = now.getMinutes();
-            }
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
+            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
         }
         setInterval(updateClock, 1000); updateClock();
 
-        // ACCESS DENIED
-        function triggerAccessDenied() {
-            const overlay = document.getElementById('alert-overlay');
-            overlay.style.display = 'block';
-            setTimeout(() => { overlay.style.display = 'none'; }, 1000);
-        }
-
-        // ESKI YOZILISH EFFEKTI
+        // TYPING
         const txt = "> Cyber Security Specialist_";
         let i = 0;
         function type() { if(i < txt.length) { document.getElementById('typing').innerHTML += txt.charAt(i); i++; setTimeout(type, 100); } }
         type();
 
-        // CANVADAGI EFFEKTLAR
+        // QOR EFFEKTI
         const canvas = document.getElementById('effect-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        let snow = [], splashes = [];
-
+        let snow = [];
         class Snow {
-            constructor() { this.reset(); this.y = Math.random() * canvas.height; }
-            reset() { this.x = Math.random() * canvas.width; this.y = -10; this.sz = Math.random() * 2 + 1; this.sp = Math.random() * 0.8 + 0.4; }
-            update() { this.y += this.sp; if(this.y > canvas.height) this.reset(); }
-            draw() { ctx.fillStyle = "rgba(255,255,255,0.2)"; ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill(); }
+            constructor() { this.x = Math.random()*canvas.width; this.y = Math.random()*canvas.height; this.sp = Math.random()*1+0.5; }
+            draw() { ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.beginPath(); ctx.arc(this.x, this.y, 1.2, 0, Math.PI*2); ctx.fill(); }
+            update() { this.y += this.sp; if(this.y > canvas.height) this.y = -5; }
         }
-
-        class Splash {
-            constructor(x, y) { this.x = x; this.y = y; this.sz = Math.random()*2+1; this.vx = Math.random()*6-3; this.vy = Math.random()*6-3; this.a = 1; }
-            update() { this.x += this.vx; this.y += this.vy; this.a -= 0.02; }
-            draw() { ctx.globalAlpha = this.a; ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha = 1; }
-        }
-
-        for(let j=0; j<60; j++) snow.push(new Snow());
-
+        for(let j=0; j<50; j++) snow.push(new Snow());
         function loop() {
-            ctx.clearRect(0,0, canvas.width, canvas.height);
+            ctx.clearRect(0,0,canvas.width, canvas.height);
             snow.forEach(s => { s.update(); s.draw(); });
-            splashes.forEach((s, k) => { s.update(); s.draw(); if(s.a <= 0) splashes.splice(k, 1); });
             requestAnimationFrame(loop);
         }
         loop();
-
-        window.addEventListener('pointerdown', (e) => { for(let j=0; j<10; j++) splashes.push(new Splash(e.clientX, e.clientY)); });
-
-        function handleLike() {
-            document.getElementById('like-count').innerText = parseInt(document.getElementById('like-count').innerText) + 1;
-            for(let j=0; j<15; j++) splashes.push(new Splash(50, window.innerHeight - 50));
-        }
-
-        window.onresize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     </script>
 </body>
 </html>
