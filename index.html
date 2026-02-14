@@ -3,243 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meliqoziyev | Pro Portfolio</title>
+    <title>Meliqoziyev | System Authorized</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        body {
-            margin: 0;
-            font-family: 'Courier New', Courier, monospace;
-            background-color: #05070a;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
-            /* Skrinshotga xalaqit bermasligi uchun pan-y qilindi */
-            touch-action: pan-y; 
-        }
+        body { background: #000; color: #fff; font-family: 'Courier New', monospace; overflow: hidden; }
 
-        #effect-canvas {
+        /* --- INTRO VIDEO QISMI --- */
+        #intro-container {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        /* --- CLOCK (RAMKASIZ) --- */
-        .cyber-clock {
-            position: fixed;
-            top: 30px;
-            right: 30px;
-            font-size: 26px;
-            font-weight: 900;
-            z-index: 10;
-            text-shadow: 0 0 15px currentColor;
-            transition: color 0.5s ease;
-        }
-
-        .container { 
-            width: 85%; 
-            max-width: 380px; 
-            text-align: center; 
-            z-index: 1;
-        }
-
-        .avatar-box { 
-            width: 120px; height: 120px; 
-            background: rgba(255, 255, 255, 0.05); 
-            border-radius: 50%;
-            margin: 0 auto 20px; 
-            border: 2px solid #30363d;
-            overflow: hidden;
-            box-shadow: 0 0 15px rgba(88, 166, 255, 0.1);
-        }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-
-        h1 { font-size: 28px; margin-bottom: 8px; letter-spacing: -1px; }
-        #typing { color: #58a6ff; font-size: 16px; margin-bottom: 35px; min-height: 22px; font-weight: bold; }
-
-        /* --- TUGMALAR (IXCHAM RAMKA) --- */
-        .card { 
-            background: rgba(22, 27, 34, 0.8); 
-            border: 1.5px solid #30363d; 
-            border-radius: 12px; 
-            padding: 12px 20px; /* Padding kamaytirildi (ixcham ramka) */
-            margin-bottom: 12px;
+            z-index: 1000;
             display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #000;
+            transition: opacity 1s ease-in-out;
+        }
+
+        #bg-video {
+            position: absolute;
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0.5;
+        }
+
+        .loader-overlay {
+            position: relative;
+            z-index: 1001;
+            text-align: center;
+        }
+
+        .status-text {
+            font-size: 18px;
+            letter-spacing: 4px;
+            color: #00ff00;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px #00ff00;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 280px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background: #00ff00;
+            box-shadow: 0 0 20px #00ff00;
+            animation: fillProgress 5s linear forwards;
+        }
+
+        @keyframes fillProgress { to { width: 100%; } }
+
+        /* --- ASOSIY SAYT --- */
+        #main-site {
+            opacity: 0;
+            display: none;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            text-decoration: none;
-            color: #fff;
-            font-weight: 800;
-            font-size: 18px; /* Yozuv hali ham katta */
-            transition: 0.2s;
-            gap: 12px;
-            backdrop-filter: blur(4px);
-        }
-
-        .card i { font-size: 22px; }
-        .fa-instagram { color: #e4405f; }
-        .fa-telegram { color: #24A1DE; }
-        .fa-youtube { color: #FF0000; }
-
-        .card:hover { 
-            border-color: #58a6ff; 
-            transform: scale(1.03); 
-            background: rgba(88, 166, 255, 0.05);
-        }
-
-        .heart-btn {
-            position: fixed;
-            bottom: 25px;
-            left: 25px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #161b22;
-            border: 1px solid #30363d;
-            padding: 10px 18px;
-            border-radius: 50px;
+            height: 100vh;
+            padding: 20px;
+            transition: opacity 1.5s ease;
             z-index: 10;
-            font-size: 16px;
         }
+
+        /* PROFIL RASMI EFFEKTI */
+        .avatar-box { 
+            width: 130px; height: 130px; 
+            border-radius: 50%; 
+            border: 3px solid #00ff00; 
+            margin-bottom: 20px; 
+            overflow: hidden;
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.3);
+            background: #111;
+        }
+        .avatar-box img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.9) contrast(1.1); }
+
+        h1 { font-size: 32px; letter-spacing: -1px; margin-bottom: 5px; text-shadow: 0 0 10px rgba(255,255,255,0.2); }
+        #typing { color: #00ff00; font-size: 16px; margin-bottom: 35px; font-weight: bold; }
+
+        .card { 
+            width: 100%; max-width: 380px;
+            background: rgba(20, 20, 20, 0.95); 
+            border: 1px solid #333; 
+            border-radius: 15px; 
+            padding: 18px; margin-bottom: 15px;
+            display: flex; align-items: center; justify-content: center;
+            text-decoration: none; color: #fff; font-weight: 800; font-size: 19px; gap: 15px;
+            transition: 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        .card:hover { border-color: #00ff00; transform: translateY(-3px); box-shadow: 0 5px 20px rgba(0, 255, 0, 0.1); }
+
+        #clock { position: fixed; top: 30px; right: 30px; font-size: 26px; font-weight: 900; transition: color 0.5s ease; }
     </style>
 </head>
 <body>
 
-    <canvas id="effect-canvas"></canvas>
-
-    <div class="cyber-clock" id="clock-box">
-        <span id="clock">00:00:00</span>
+    <div id="intro-container">
+        <video id="bg-video" autoplay muted loop playsinline>
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-digital-animation-of-binary-code-data-41203-large.mp4" type="video/mp4">
+        </video>
+        
+        <div class="loader-overlay">
+            <div class="status-text">DECRYPTING ACCESS...</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <p style="margin-top: 15px; font-size: 11px; color: #555; letter-spacing: 2px;">SECURE CONNECTION v8.2</p>
+        </div>
     </div>
 
-    <div class="container">
+    <div id="main-site">
+        <div id="clock">00:00:00</div>
+        
         <div class="avatar-box">
-             <img src="https://via.placeholder.com/150" alt="Meliqoziyev">
+             <img src="https://img.freepik.com/premium-photo/hacker-with-hoodie-standing-front-digital-screens-with-binary-code-cyber-security-concept_1020697-39655.jpg" alt="Meliqoziyev">
         </div>
 
         <h1>meliqoziyev.uz</h1>
-        <div id="typing"></div>
+        <div id="typing">> Cyber Security Specialist_</div>
 
-        <a href="https://www.instagram.com/ezz_mafiya/" target="_blank" class="card">
-            <i class="fab fa-instagram"></i> Instagram
+        <a href="https://instagram.com/ezz_mafiya" target="_blank" class="card">
+            <i class="fab fa-instagram" style="color: #e4405f; font-size: 24px;"></i> Instagram
         </a>
-
         <a href="https://t.me/Pain_2007" target="_blank" class="card">
-            <i class="fab fa-telegram"></i> Telegram
+            <i class="fab fa-telegram" style="color: #24A1DE; font-size: 24px;"></i> Telegram
         </a>
-
         <a href="https://youtube.com/@uzclaver_official" target="_blank" class="card">
-            <i class="fab fa-youtube"></i> UzClaver
+            <i class="fab fa-youtube" style="color: #FF0000; font-size: 24px;"></i> UzClaver
         </a>
-    </div>
-
-    <div class="heart-btn" onclick="handleLike()">
-        <span>❤️</span><span id="like-count">358</span>
     </div>
 
     <script>
-        // SOAT (Har 10 sekundda rang alishadi)
-        const colors = ['#ff4a4a', '#00ff00', '#00ffff', '#ffff00', '#58a6ff', '#ff00ff', '#ffffff'];
-        function updateClock() {
-            const now = new Date();
-            const sec = now.getSeconds();
-            if (sec % 10 === 0) {
-                const randomColor = colors[Math.floor(Math.random() * colors.length)];
-                document.getElementById('clock-box').style.color = randomColor;
-            }
-            document.getElementById('clock').innerText = now.toLocaleTimeString();
+        // 5 SEKUNDDAN KEYIN AVTOMATIK KIRISH
+        setTimeout(() => {
+            const intro = document.getElementById('intro-container');
+            const main = document.getElementById('main-site');
+            
+            intro.style.opacity = '0';
+            setTimeout(() => {
+                intro.style.display = 'none';
+                main.style.display = 'flex';
+                setTimeout(() => { main.style.opacity = '1'; }, 50);
+                startClock();
+            }, 1000);
+        }, 5000);
+
+        // SOAT (Har 5 sekundda rang o'zgarishi)
+        const colors = ['#00ff00', '#00ffff', '#ff0000', '#ffff00', '#ff00ff', '#ffffff'];
+        function startClock() {
+            setInterval(() => {
+                const now = new Date();
+                if (now.getSeconds() % 5 === 0) {
+                    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                    document.getElementById('clock').style.color = randomColor;
+                }
+                document.getElementById('clock').innerText = now.toLocaleTimeString();
+            }, 1000);
         }
-        setInterval(updateClock, 1000); updateClock();
-
-        // TYPING
-        const txt = "> Cyber Security Specialist_";
-        let i = 0;
-        function type() { if(i < txt.length) { document.getElementById('typing').innerHTML += txt.charAt(i); i++; setTimeout(type, 100); } }
-        type();
-
-        // CANVAS
-        const canvas = document.getElementById('effect-canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        
-        let snow = [];
-        let splashes = [];
-
-        class Snow {
-            constructor() { 
-                this.x = Math.random() * canvas.width; 
-                this.y = Math.random() * canvas.height; 
-                this.sz = Math.random() * 2 + 1; 
-                this.sp = Math.random() * 1.2 + 0.6; 
-            }
-            draw() { 
-                ctx.fillStyle = "rgba(255, 255, 255, 0.5)"; 
-                ctx.beginPath(); 
-                ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); 
-                ctx.fill(); 
-            }
-            update() { 
-                this.y += this.sp; 
-                if(this.y > canvas.height) this.y = -10; 
-            }
-        }
-
-        class Splash {
-            constructor(x, y) {
-                this.x = x; this.y = y;
-                this.sz = Math.random() * 3 + 1.5;
-                this.vx = (Math.random() - 0.5) * 8;
-                this.vy = (Math.random() - 0.5) * 8;
-                this.a = 1;
-            }
-            draw() {
-                ctx.globalAlpha = this.a;
-                ctx.fillStyle = "#ffffff";
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2);
-                ctx.fill();
-                ctx.globalAlpha = 1;
-            }
-            update() {
-                this.x += this.vx;
-                this.y += this.vy;
-                this.a -= 0.025;
-            }
-        }
-
-        for(let j=0; j<70; j++) snow.push(new Snow());
-
-        function loop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            snow.forEach(s => { s.update(); s.draw(); });
-            splashes.forEach((s, index) => {
-                s.update();
-                s.draw();
-                if(s.a <= 0) splashes.splice(index, 1);
-            });
-            requestAnimationFrame(loop);
-        }
-        loop();
-
-        // SACHRASH (Sichqoncha va Touch)
-        window.addEventListener('mousedown', (e) => {
-            for(let i=0; i<12; i++) splashes.push(new Splash(e.clientX, e.clientY));
-        });
-        window.addEventListener('touchstart', (e) => {
-            const touch = e.touches[0];
-            for(let i=0; i<12; i++) splashes.push(new Splash(touch.clientX, touch.clientY));
-        });
-
-        function handleLike() {
-            document.getElementById('like-count').innerText = parseInt(document.getElementById('like-count').innerText) + 1;
-        }
-
-        window.onresize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     </script>
 </body>
 </html>
