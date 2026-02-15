@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meliqoziyev.uz | White & Green</title>
+    <title>Meliqoziyev.uz | 10s Intro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
 
-        /* INTRO QISMI */
+        /* INTRO QISMI (10 SEKUND) */
         #intro-screen {
             position: fixed;
             top: 0; left: 0;
@@ -28,7 +28,7 @@
             font-size: 38px;
             font-weight: 900;
             color: #ffffff; /* Oq rang */
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 10px #00ff00; /* Oq nur va yashil cheti */
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 10px #00ff00;
             letter-spacing: 6px;
             z-index: 10001;
             text-transform: uppercase;
@@ -134,7 +134,7 @@
         function drawMatrix() {
             mCtx.fillStyle = "rgba(0, 0, 0, 0.05)";
             mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
-            mCtx.fillStyle = "#00ff00"; // Yashil 01 lar
+            mCtx.fillStyle = "#00ff00"; 
             mCtx.font = fontSize + "px monospace";
             for (let i = 0; i < rainDrops.length; i++) {
                 const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
@@ -145,7 +145,7 @@
         }
         let matrixInterval = setInterval(drawMatrix, 35);
 
-        // --- 6 SEKUNDDAN KEYIN O'TISH ---
+        // --- 10 SEKUNDDAN KEYIN O'TISH ---
         setTimeout(() => {
             clearInterval(matrixInterval);
             const intro = document.getElementById('intro-screen');
@@ -159,7 +159,7 @@
                 initSnow();
                 startClock();
             }, 1500);
-        }, 6000);
+        }, 10000); // 10000ms = 10 SEKUND
 
         // --- QOR EFFEKTI ---
         const sCanvas = document.getElementById('snow-canvas');
