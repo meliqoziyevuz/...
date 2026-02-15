@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meliqoziyev.uz | Custom Intro</title>
+    <title>Meliqoziyev.uz | Smart Intro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #000; color: #00ff00; font-family: 'Courier New', monospace; overflow: hidden; height: 100vh; }
 
-        /* 1. SENING YUKLAGAN VIDEONG (INTRO) */
+        /* INTRO VIDEO */
         #video-intro {
             position: fixed;
             top: 0; left: 0;
@@ -24,9 +24,10 @@
             min-width: 100%; 
             min-height: 100%; 
             object-fit: cover; 
+            cursor: pointer;
         }
 
-        /* 2. ASOSIY SAYT KONTENTI */
+        /* ASOSIY SAYT */
         #main-site {
             display: none;
             opacity: 0;
@@ -34,7 +35,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: opacity 1s ease;
+            transition: opacity 1.2s ease;
             position: relative;
             z-index: 10;
         }
@@ -48,7 +49,6 @@
             margin-bottom: 15px;
             overflow: hidden;
             box-shadow: 0 0 25px rgba(0, 255, 0, 0.6);
-            background: #000;
         }
         .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -84,6 +84,7 @@
         }
         .liked { color: #ff0000 !important; -webkit-text-stroke: 0px !important; text-shadow: 0 0 20px #ff0000; }
 
+        /* HACKER TEXT EFFECT */
         .hacker-text {
             position: absolute;
             pointer-events: none;
@@ -101,9 +102,8 @@
 <body onmousedown="spawnHackerText(event)">
 
     <div id="video-intro">
-        <video id="intro-video-element" autoplay muted playsinline>
+        <video id="intro-video-element" autoplay muted playsinline onended="enterSite()">
             <source src="1000119438.mp4" type="video/mp4">
-            Brauzeringiz videoni qo'llab-quvvatlamaydi.
         </video>
     </div>
 
@@ -126,21 +126,28 @@
     </div>
 
     <script>
-        // --- VIDEO TAYMERI ---
-        // Sening videong taxminan 6 sekund. 6 sekunddan keyin sayt ochiladi.
-        setTimeout(() => {
-            const intro = document.getElementById('video-intro');
-            const main = document.getElementById('main-site');
-            intro.style.transition = "opacity 1s";
-            intro.style.opacity = "0";
+        const video = document.getElementById('intro-video-element');
+        const introDiv = document.getElementById('video-intro');
+        const mainSite = document.getElementById('main-site');
+
+        // VIDEO TUGAGANDA ISHLAYDIGAN FUNKSIYA
+        function enterSite() {
+            introDiv.style.transition = "opacity 1s ease";
+            introDiv.style.opacity = "0";
             setTimeout(() => {
-                intro.style.display = "none";
-                main.style.display = "flex";
-                setTimeout(() => main.style.opacity = "1", 50);
+                introDiv.style.display = "none";
+                mainSite.style.display = "flex";
+                setTimeout(() => mainSite.style.opacity = "1", 50);
                 initMatrix();
                 startClock();
             }, 1000);
-        }, 6000); // 6000ms = 6 sekund
+        }
+
+        // AGAR VIDEO AVTOMATIK BOSHLANMASA, EKRANGA BIR MARTA BOSILSA HAM O'TIB KETADI
+        // (Bu ba'zi brauzerlar cheklovi uchun zaxira usul)
+        video.addEventListener('click', () => {
+            if (video.paused) video.play();
+        });
 
         function startClock() {
             const colors = ['#0f0', '#0ff', '#f00', '#ff0', '#fff'];
@@ -177,9 +184,9 @@
             setInterval(draw, 33);
         }
 
-        const codeWords = ["HACKED", "ERROR", "SYSTEM", "ACCESS", "010101", "PAIN", "ROOT"];
+        const codeWords = ["HACKED", "ERROR", "SYSTEM", "ACCESS", "010101", "PAIN"];
         function spawnHackerText(e) {
-            if(document.getElementById('main-site').style.display !== "flex") return;
+            if(mainSite.style.display !== "flex") return;
             for(let i=0; i<5; i++) {
                 const span = document.createElement('span');
                 span.className = 'hacker-text';
