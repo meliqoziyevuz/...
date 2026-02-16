@@ -57,12 +57,6 @@
         .tg-neon { border-color: #229ED9; box-shadow: 0 0 10px #229ED9; }
         .yt-neon { border-color: #FF0000; box-shadow: 0 0 10px #FF0000; }
 
-        /* PAGE 2: LOYIHALAR */
-        .project-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; width: 100%; max-width: 320px; }
-        .p-card { background: rgba(0, 255, 0, 0.05); border: 1px solid #0f0; padding: 15px; border-radius: 10px; text-align: center; transition: 0.3s; backdrop-filter: blur(5px); }
-        .p-card i { font-size: 28px; color: #0f0; margin-bottom: 8px; text-shadow: 0 0 10px #0f0; }
-        .p-card h3 { font-size: 13px; letter-spacing: 1px; color: #fff; }
-
         /* FIKR BILDIRISH */
         .feedback-container {
             width: 85%; max-width: 320px;
@@ -76,10 +70,8 @@
         button#send-msg { width: 100%; padding: 10px; background: #0f0; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; box-shadow: 0 0 10px #0f0; font-size: 14px; color: #000; }
         
         #like-section { position: fixed; bottom: 30px; left: 30px; display: flex; flex-direction: column; align-items: center; z-index: 100; }
-        #music-section { position: fixed; bottom: 30px; right: 30px; z-index: 100; display: flex; align-items: center; gap: 10px; }
-        #music-name { font-size: 10px; color: #0f0; font-family: monospace; opacity: 0; transition: 0.5s; }
-        #music-section:hover #music-name { opacity: 1; }
-        .icon-btn { font-size: 40px; color: #fff; }
+        #music-section { position: fixed; bottom: 30px; right: 30px; z-index: 100; display: flex; align-items: center; }
+        .icon-btn { font-size: 40px; color: #fff; transition: 0.3s; }
         .liked { color: #ff0000 !important; text-shadow: 0 0 20px #ff0000; }
     </style>
 </head>
@@ -114,16 +106,6 @@
         </div>
 
         <div class="page" id="p2">
-            <h2 style="color:#0f0; margin-bottom: 25px; text-shadow: 0 0 10px #0f0; letter-spacing: 2px;">MY PROJECTS</h2>
-            <div class="project-grid">
-                <div class="p-card"><i class="fas fa-robot"></i><h3>Bots</h3></div>
-                <div class="p-card"><i class="fas fa-code"></i><h3>Web</h3></div>
-                <div class="p-card"><i class="fas fa-user-shield"></i><h3>Sec</h3></div>
-                <div class="p-card"><i class="fas fa-terminal"></i><h3>Scripts</h3></div>
-            </div>
-        </div>
-
-        <div class="page" id="p3">
             <div class="feedback-container">
                 <h2>Fikr bildirish</h2>
                 <input type="text" id="userName" placeholder="Ismingiz" required>
@@ -137,12 +119,11 @@
             <span id="like-count" style="margin-top:5px; font-weight:bold;">1.5k</span>
         </div>
         <div id="music-section">
-            <span id="music-name">Dark_Phonk_Vibe.mp3</span>
             <i class="fas fa-volume-mute icon-btn" id="music-btn" onclick="toggleMusic()"></i>
         </div>
     </div>
 
-    <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3"></audio>
+    <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
 
     <script>
         const mCanvas = document.getElementById('matrix-intro-canvas');
@@ -169,10 +150,7 @@
                 setTimeout(() => document.getElementById('main-wrapper').style.opacity = "1", 50);
                 initSnow(); startClock();
             }, 1000);
-        }, 7000); // 7 sekundlik intro saqlandi
-
-        const cursor = document.getElementById('cursor-pointer');
-        window.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+        }, 7000); // Intro saqlandi
 
         let currentPage = 1;
         function changePage(dir) {
@@ -180,18 +158,18 @@
             currentPage += dir;
             document.getElementById('p'+currentPage).classList.add('active');
             document.getElementById('prevBtn').style.display = (currentPage === 1) ? 'none' : 'block';
-            document.getElementById('nextBtn').style.display = (currentPage === 3) ? 'none' : 'block';
+            document.getElementById('nextBtn').style.display = (currentPage === 2) ? 'none' : 'block';
         }
 
+        const cursor = document.getElementById('cursor-pointer');
+        window.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+
         function sendToTelegram() {
-            const token = "7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM"; 
-            const chat_id = "6804374367"; 
             const name = document.getElementById('userName').value;
             const msg = document.getElementById('userMsg').value;
-            if(!name || !msg) { alert("Iltimos, maydonlarni to'ldiring!"); return; }
-            const text = `🚀 *Yangi xabar!*\n\n👤 *Kimdan:* ${name}\n💬 *Fikr:* ${msg}`;
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(text)}&parse_mode=Markdown`)
-            .then(() => { alert("Muvaffaqiyatli yuborildi! ✅"); document.getElementById('userName').value = ""; document.getElementById('userMsg').value = ""; });
+            if(!name || !msg) return alert("To'ldiring!");
+            fetch(`https://api.telegram.org/bot7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM/sendMessage?chat_id=6804374367&text=${encodeURIComponent("Ism: "+name+"\nXabar: "+msg)}`)
+            .then(() => { alert("Yuborildi! ✅"); document.getElementById('userName').value = ""; document.getElementById('userMsg').value = ""; });
         }
 
         function startClock() {
@@ -208,13 +186,13 @@
         function initSnow() { sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight; for(let i=0; i<100; i++) snowP.push(new Snowflake()); animate(); }
         class Snowflake {
             constructor() { this.reset(); }
-            reset() { this.x = Math.random()*sCanvas.width; this.y = Math.random()*-sCanvas.height; this.size = Math.random()*3+1; this.speed = Math.random()*1+0.5; this.opacity = Math.random(); this.vx = 0; }
+            reset() { this.x = Math.random()*sCanvas.width; this.y = Math.random()*-sCanvas.height; this.size = Math.random()*3+1; this.speed = Math.random()*1+0.5; this.opacity = Math.random(); }
             update() { this.y += this.speed; if(this.y > sCanvas.height) this.reset(); }
-            draw() { sCtx.fillStyle = `rgba(255,255,255,${this.opacity})`; sCtx.beginPath(); sCtx.arc(this.x,this.y,this.size,0,Math.PI*2); sCtx.fill(); }
+            draw() { sCtx.fillStyle = `rgba(255,255,255,${this.opacity})`; sCtx.beginPath(); sCtx.arc(this.x,this.y,this.size,0,7); sCtx.fill(); }
         }
         function animate() { sCtx.clearRect(0,0,sCanvas.width,sCanvas.height); snowP.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
         function spawnSnowBurst(e) {}
-        function handleLike() { const b = document.getElementById('like-btn'); b.classList.add('liked'); document.getElementById('like-count').innerText = "1.6k"; }
+        function handleLike() { document.getElementById('like-btn').classList.add('liked'); document.getElementById('like-count').innerText = "1.6k"; }
         function toggleMusic() { const a = document.getElementById('bg-music'); const b = document.getElementById('music-btn'); if(a.paused) { a.play(); b.className = "fas fa-volume-up icon-btn"; } else { a.pause(); b.className = "fas fa-volume-mute icon-btn"; } }
     </script>
 </body>
