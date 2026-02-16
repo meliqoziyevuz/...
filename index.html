@@ -48,7 +48,9 @@
         }
 
         #snow-canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
-        .avatar-box { width: 130px; height: 130px; border-radius: 50%; border: 3px solid #0f0; margin-bottom: 20px; overflow: hidden; box-shadow: 0 0 20px #0f0; }
+        .avatar-box { width: 140px; height: 140px; border-radius: 50%; border: 3px solid #0f0; margin-bottom: 20px; overflow: hidden; box-shadow: 0 0 25px #0f0; background: #111; }
+        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
+        
         .glitch { font-size: 38px; font-weight: 800; color: #fff; letter-spacing: 2px; position: relative; text-shadow: 0.05em 0 0 #00fffc, -0.03em -0.04em 0 #fc00ff, 0.025em 0.04em 0 #fffc00; animation: glitch 800ms infinite; }
 
         /* CARDS */
@@ -91,7 +93,7 @@
 
         <div class="page active" id="p1">
             <div class="avatar-box">
-                 <img src="https://i.pinimg.com/originals/8a/0b/4c/8a0b4ca2b06e93817117865f37bc449e.jpg" style="width:100%">
+                 <img src="https://raw.githubusercontent.com/meliqoziyev/meliqoziyev.uz/main/IMG_20260217_025619.jpg" alt="Profile">
             </div>
             <h1 class="glitch" style="margin-bottom: 35px;">meliqoziyev.uz</h1>
             <a href="https://instagram.com/ezz_mafiya" target="_blank" class="card insta-neon"><i class="fab fa-instagram" style="margin-right:20px; color:#E1306C;"></i> Instagram</a>
@@ -117,7 +119,7 @@
         </div>
     </div>
 
-    <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-10.mp3"></audio>
+    <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3"></audio>
 
     <script>
         // Matrix Intro
@@ -160,13 +162,14 @@
             draw() { sCtx.fillStyle = `rgba(255,255,255,${this.opacity})`; sCtx.beginPath(); sCtx.arc(this.x,this.y,this.size,0,7); sCtx.fill(); }
         }
 
-        // QOR SACHRATISH FUNKSIYASI
+        // QOR SACHRATISH (Snow Burst)
         function spawnSnowBurst(e) {
             for(let i=0; i<15; i++) {
                 let p = new Snowflake();
                 p.x = e.clientX; p.y = e.clientY;
-                p.vx = (Math.random() - 0.5) * 10;
-                p.vy = (Math.random() - 0.5) * 10;
+                p.vx = (Math.random() - 0.5) * 12;
+                p.vy = (Math.random() - 0.5) * 12;
+                p.size = Math.random() * 4 + 2;
                 snowP.push(p);
                 setTimeout(() => snowP.splice(snowP.indexOf(p), 1), 800);
             }
@@ -174,7 +177,7 @@
 
         function animate() { sCtx.clearRect(0,0,sCanvas.width,sCanvas.height); snowP.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
 
-        // Navigation & UI
+        // Navigation
         let currentPage = 1;
         function changePage(dir) {
             document.getElementById('p'+currentPage).classList.remove('active');
