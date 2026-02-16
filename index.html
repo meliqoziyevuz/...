@@ -3,21 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>meliqoziyev.uz | Neon Edition</title>
+    <title>meliqoziyev.uz | Pro Neon Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
 
-        /* PROFESSIONAL UCUBRCHAK KURSOR */
+        /* HAQIQIY KOMPYUTER SICHQONCHASI SHAKLI (SVG) */
         #cursor-pointer {
-            position: fixed; width: 0; height: 0;
-            border-left: 10px solid transparent;
-            border-right: 10px solid transparent;
-            border-bottom: 20px solid #fff;
-            transform: rotate(-30deg);
+            position: fixed; width: 25px; height: 25px;
             pointer-events: none; z-index: 100000;
             filter: drop-shadow(0 0 8px #0f0);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='white' stroke='black' stroke-width='1'%3E%3Cpath d='M5.5 3.21V20.8l4.64-4.47 2.9 6.27 2.41-1.12-2.9-6.27 6.44-.04L5.5 3.21z'/%3E%3C/svg%3E");
+            background-size: contain;
+            background-repeat: no-repeat;
         }
 
         /* INTRO SCREEN */
@@ -153,11 +152,7 @@
             const clockEl = document.getElementById('clock');
             const colors = ['#0f0', '#00f', '#f0f', '#ff0', '#0ff'];
             let colorIndex = 0;
-
-            setInterval(() => {
-                clockEl.innerText = new Date().toLocaleTimeString();
-            }, 1000);
-
+            setInterval(() => { clockEl.innerText = new Date().toLocaleTimeString(); }, 1000);
             setInterval(() => {
                 colorIndex = (colorIndex + 1) % colors.length;
                 clockEl.style.color = colors[colorIndex];
