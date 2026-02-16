@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asadbek | Media Portfoli</title>
+    <title>Asadbek | Official</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
@@ -17,52 +17,68 @@
             background-size: contain; background-repeat: no-repeat;
         }
 
-        /* MATRIX INTRO (7s) */
+        /* MATRIX INTRO */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10000; display: flex; justify-content: center; align-items: center; background: #000; transition: 1s; }
         #matrix-intro-canvas { position: absolute; top: 0; left: 0; }
         .welcome-box { position: relative; z-index: 10001; text-align: center; }
-        .line { display: block; font-size: 40px; font-weight: 900; letter-spacing: 10px; text-transform: uppercase; color: #fff; text-shadow: 0 0 15px #00ff00; opacity: 0; animation: appear 1.2s ease-out forwards; }
-        .line.bottom { animation-delay: 1.5s; color: #00ff00; }
-        @keyframes appear { 0% { opacity: 0; transform: scale(0.5); } 100% { opacity: 1; transform: scale(1); } }
+        .line { display: block; font-size: 45px; font-weight: 900; letter-spacing: 5px; text-transform: uppercase; color: #fff; text-shadow: 0 0 15px #00ff00; opacity: 0; animation: appear 1.5s ease-out forwards; }
+        @keyframes appear { 0% { opacity: 0; transform: translateY(20px); } 100% { opacity: 1; transform: translateY(0); } }
 
         /* MAIN UI */
         #main-wrapper { display: none; opacity: 0; transition: 1.5s; }
         .page { position: absolute; width: 100%; height: 100vh; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 10; padding: 20px; }
         .active { display: flex; }
 
-        /* MEDIA SECTION */
-        .media-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 20px; }
-        .video-box { width: 100%; border: 2px solid #0f0; border-radius: 15px; overflow: hidden; box-shadow: 0 0 20px #0f0; background: #111; }
-        video { width: 100%; display: block; height: 300px; object-fit: cover; }
+        /* SOCIAL CARDS */
+        .card { 
+            width: 330px; padding: 18px; margin-bottom: 15px; 
+            background: rgba(0, 255, 0, 0.05); color: #fff; text-decoration: none; 
+            border-radius: 15px; display: flex; align-items: center; 
+            border: 2px solid #0f0; transition: 0.4s; font-size: 18px; font-weight: bold;
+        }
+        .card i { font-size: 24px; margin-right: 20px; }
+        .card:hover { transform: scale(1.05); box-shadow: 0 0 20px #0f0; background: #0f0; color: #000; }
+
+        /* MEDIA BOXES */
+        .media-item { 
+            width: 100%; max-width: 450px; padding: 20px; 
+            border: 2px solid #0f0; border-radius: 20px; 
+            background: rgba(0,255,0,0.03); box-shadow: 0 0 15px rgba(0,255,0,0.2);
+            margin-bottom: 25px;
+        }
+        video { width: 100%; border-radius: 10px; border: 1px solid #0f0; }
         audio { width: 100%; filter: invert(1) hue-rotate(90deg); }
 
-        /* LIKE BUTTON */
-        #like-btn { position: fixed; bottom: 30px; left: 30px; font-size: 35px; color: #555; cursor: pointer; z-index: 1000; transition: 0.3s; }
-        #like-btn.liked { color: #f00; text-shadow: 0 0 15px #f00; transform: scale(1.2); }
+        /* LIKE SECTION */
+        #like-container { 
+            position: fixed; bottom: 30px; left: 30px; z-index: 1000; 
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+        }
+        #like-btn { font-size: 40px; color: #333; transition: 0.3s; }
+        #like-count { font-size: 22px; color: #0f0; font-weight: bold; text-shadow: 0 0 10px #0f0; }
+        .liked #like-btn { color: #f00; text-shadow: 0 0 20px #f00; transform: scale(1.2); }
 
-        /* CLOCK & NAV */
-        #clock { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); font-size: 28px; font-family: 'Courier New', monospace; z-index: 100; color: #0f0; }
+        /* OTHER */
+        #clock { position: fixed; top: 25px; left: 50%; transform: translateX(-50%); font-size: 28px; z-index: 100; color: #0f0; }
         .nav-arrow { position: fixed; top: 50%; transform: translateY(-50%); font-size: 45px; color: #0f0; cursor: pointer; z-index: 1000; }
         #nextBtn { right: 30px; } #prevBtn { left: 30px; display: none; }
-
-        /* AVATAR & CARDS */
-        .avatar-box { width: 130px; height: 130px; border-radius: 50%; border: 3px solid #0f0; margin-bottom: 20px; overflow: hidden; box-shadow: 0 0 20px #0f0; }
-        .avatar-box img { width: 100%; height: 100%; object-fit: cover; }
-        .card { width: 300px; padding: 12px; margin-bottom: 10px; background: rgba(0,0,0,0.6); color: #fff; text-decoration: none; border-radius: 10px; display: flex; align-items: center; border: 1px solid #0f0; transition: 0.3s; }
-        .card:hover { background: #0f0; color: #000; }
+        .avatar-box { width: 140px; height: 140px; border-radius: 50%; border: 3px solid #0f0; margin-bottom: 25px; overflow: hidden; box-shadow: 0 0 25px #0f0; }
         #snow-canvas { position: fixed; top: 0; left: 0; z-index: 1; pointer-events: none; }
     </style>
 </head>
 <body onmousedown="spawnSnowBurst(event)">
 
     <div id="cursor-pointer"></div>
-    <i class="fas fa-heart" id="like-btn" onclick="toggleLike()"></i>
+
+    <div id="like-container" onclick="toggleLike()">
+        <i class="fa-solid fa-heart" id="like-btn"></i>
+        <span id="like-count">128</span>
+    </div>
 
     <div id="intro-screen">
         <canvas id="matrix-intro-canvas"></canvas>
         <div class="welcome-box">
-            <span class="line">ASADBEK</span>
-            <span class="line bottom">WELCOME</span>
+            <span class="line">Assalomu Alaykum</span>
         </div>
     </div>
 
@@ -76,66 +92,74 @@
 
         <div class="page active" id="p1">
             <div class="avatar-box">
-                <img src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/1000047368.jpg" alt="Profil">
+                <img src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/1000047368.jpg" style="width:100%; height:100%; object-fit:cover;">
             </div>
-            <h1 style="margin-bottom: 20px; text-shadow: 0 0 10px #0f0;">Asadbek</h1>
-            <a href="https://instagram.com/ezz_mafiya" target="_blank" class="card"><i class="fab fa-instagram" style="margin-right:15px; color:#E1306C;"></i> Instagram</a>
-            <a href="https://t.me/Pain_2007" target="_blank" class="card"><i class="fab fa-telegram" style="margin-right:15px; color:#229ED9;"></i> Telegram</a>
-            <a href="https://youtube.com/@SIZNING_KANAL" target="_blank" class="card"><i class="fab fa-youtube" style="margin-right:15px; color:#FF0000;"></i> YouTube</a>
+            <h1 style="margin-bottom: 30px; font-size: 35px; text-shadow: 0 0 10px #0f0;">Asadbek</h1>
+            
+            <a href="https://instagram.com/ezz_mafiya" target="_blank" class="card">
+                <i class="fab fa-instagram" style="color: #E1306C;"></i> Instagram
+            </a>
+            <a href="https://t.me/Pain_2007" target="_blank" class="card">
+                <i class="fab fa-telegram" style="color: #229ED9;"></i> Telegram
+            </a>
+            <a href="https://youtube.com/@sizning_kanal" target="_blank" class="card">
+                <i class="fab fa-youtube" style="color: #FF0000;"></i> YouTube
+            </a>
         </div>
 
         <div class="page" id="p2">
-            <h2 style="color:#0f0; margin-bottom: 20px;">Media Galereya</h2>
-            <div class="media-container">
-                
-                <div style="text-align: center;">
-                    <p style="font-size: 14px; color: #0f0; margin-bottom: 5px;"><i class="fas fa-music"></i> Tanlangan Musiqa</p>
-                    <audio id="myAudio" controls onplay="stopOther('audio')">
-                        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
-                    </audio>
-                </div>
+            <h2 style="color:#0f0; margin-bottom: 25px;">Mening Galereyam</h2>
+            
+            <div class="media-item">
+                <p style="color:#0f0; margin-bottom:10px; font-weight:bold;"><i class="fas fa-music"></i> Audio Trek</p>
+                <audio id="myAudio" controls onplay="stopOther('audio')">
+                    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+                </audio>
+            </div>
 
-                <div class="video-box">
-                    <video id="myVideo" controls onplay="stopOther('video')">
-                        <source src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/VID_20260217_042543_562.mp4" type="video/mp4">
-                    </video>
-                </div>
-
+            <div class="media-item">
+                <p style="color:#0f0; margin-bottom:10px; font-weight:bold;"><i class="fas fa-video"></i> Video Lavha</p>
+                <video id="myVideo" controls onplay="stopOther('video')">
+                    <source src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/VID_20260217_042543_562.mp4" type="video/mp4">
+                </video>
             </div>
         </div>
 
         <div class="page" id="p3">
-             <div style="background: rgba(0,0,0,0.8); padding: 25px; border: 1px solid #0f0; border-radius: 20px; width: 320px;">
-                <h2 style="text-align:center; color:#0f0; margin-bottom:20px;">Fikr bildirish</h2>
-                <input type="text" id="userName" placeholder="Ismingiz" style="width:100%; padding:10px; margin-bottom:10px; background:none; border:1px solid #0f0; color:#fff;">
-                <textarea id="userMsg" placeholder="Xabar..." style="width:100%; padding:10px; margin-bottom:10px; background:none; border:1px solid #0f0; color:#fff; height:80px;"></textarea>
-                <button onclick="sendToTelegram()" style="width:100%; padding:10px; background:#0f0; border:none; color:#000; font-weight:bold; cursor:pointer;">Yuborish</button>
+            <div style="background: rgba(0,0,0,0.8); padding: 30px; border: 2px solid #0f0; border-radius: 20px; width: 340px;">
+                <h2 style="text-align:center; color:#0f0; margin-bottom:20px;">Xabar qoldiring</h2>
+                <input type="text" id="userName" placeholder="Ismingiz" style="width:100%; padding:12px; margin-bottom:15px; background:none; border:1px solid #0f0; color:#fff; border-radius:8px;">
+                <textarea id="userMsg" placeholder="Xabar..." style="width:100%; padding:12px; margin-bottom:15px; background:none; border:1px solid #0f0; color:#fff; border-radius:8px; height:100px; resize:none;"></textarea>
+                <button onclick="sendToTelegram()" style="width:100%; padding:12px; background:#0f0; border:none; color:#000; font-weight:bold; border-radius:8px;">YUBORISH</button>
             </div>
         </div>
     </div>
 
     <script>
-        // LIKE TUGMASI FUNKSIYASI
+        // LIKE FUNKSIYASI
+        let likes = 128;
+        let isLiked = false;
         function toggleLike() {
-            const btn = document.getElementById('like-btn');
-            btn.classList.toggle('liked');
-            if(btn.classList.contains('liked')) {
-                btn.classList.remove('fa-regular');
-                btn.classList.add('fa-solid');
+            const container = document.getElementById('like-container');
+            const countLabel = document.getElementById('like-count');
+            if(!isLiked) {
+                likes++; isLiked = true;
+                container.classList.add('liked');
             } else {
-                btn.classList.remove('fa-solid');
-                btn.classList.add('fa-regular');
+                likes--; isLiked = false;
+                container.classList.remove('liked');
             }
+            countLabel.innerText = likes;
         }
 
-        // BIR VAQTDA ISHLAMASLIK FUNKSIYASI
+        // STOP OTHER MEDIA
         function stopOther(type) {
             const v = document.getElementById('myVideo');
             const a = document.getElementById('myAudio');
-            if(type === 'video') { a.pause(); } else { v.pause(); }
+            if(type === 'video') a.pause(); else v.pause();
         }
 
-        // MATRIX & SNOW (Oldingi kodlar kabi)
+        // MATRIX INTRO
         const mCanvas = document.getElementById('matrix-intro-canvas');
         const mCtx = mCanvas.getContext('2d');
         mCanvas.width = window.innerWidth; mCanvas.height = window.innerHeight;
@@ -161,11 +185,11 @@
             }, 1000);
         }, 7000);
 
-        // QOR SACHRASHI
+        // SNOWBURST & CLOCK
         const sCanvas = document.getElementById('snow-canvas');
         const sCtx = sCanvas.getContext('2d');
         let snowP = [];
-        function initSnow() { sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight; for(let i=0; i<80; i++) snowP.push(new Snowflake()); animate(); }
+        function initSnow() { sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight; for(let i=0; i<60; i++) snowP.push(new Snowflake()); animate(); }
         class Snowflake {
             constructor() { this.reset(); }
             reset() { this.x = Math.random()*sCanvas.width; this.y = Math.random()*-sCanvas.height; this.size = Math.random()*3+1; this.speed = Math.random()*1+0.5; this.opacity = Math.random(); this.vx = 0; this.vy = this.speed; }
@@ -173,15 +197,15 @@
             draw() { sCtx.fillStyle = `rgba(255,255,255,${this.opacity})`; sCtx.beginPath(); sCtx.arc(this.x,this.y,this.size,0,7); sCtx.fill(); }
         }
         function spawnSnowBurst(e) {
-            for(let i=0; i<15; i++) {
+            for(let i=0; i<10; i++) {
                 let p = new Snowflake(); p.x = e.clientX; p.y = e.clientY;
-                p.vx = (Math.random()-0.5)*12; p.vy = (Math.random()-0.5)*12;
-                snowP.push(p); setTimeout(() => snowP.splice(snowP.indexOf(p), 1), 800);
+                p.vx = (Math.random()-0.5)*10; p.vy = (Math.random()-0.5)*10;
+                snowP.push(p); setTimeout(() => snowP.splice(snowP.indexOf(p), 1), 700);
             }
         }
         function animate() { sCtx.clearRect(0,0,sCanvas.width,sCanvas.height); snowP.forEach(p => { p.update(); p.draw(); }); requestAnimationFrame(animate); }
 
-        // NAVIGATSIYA
+        // NAVIGATION & CLOCK
         let currentPage = 1;
         function changePage(dir) {
             document.getElementById('p'+currentPage).classList.remove('active');
@@ -190,22 +214,15 @@
             document.getElementById('prevBtn').style.display = (currentPage === 1) ? 'none' : 'block';
             document.getElementById('nextBtn').style.display = (currentPage === 3) ? 'none' : 'block';
         }
-
         const cursor = document.getElementById('cursor-pointer');
         window.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
-
         function startClock() {
-            const clk = document.getElementById('clock');
-            const colors = ['#0f0', '#00f', '#f0f', '#ff0', '#0ff', '#f00'];
-            let ci = 0;
-            setInterval(() => { clk.innerText = new Date().toLocaleTimeString(); }, 1000);
-            setInterval(() => { ci = (ci + 1) % colors.length; clk.style.color = colors[ci]; }, 5000);
+            setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
         }
-
         function sendToTelegram() {
             const n = document.getElementById('userName').value; const m = document.getElementById('userMsg').value;
             if(!n || !m) return alert("To'ldiring!");
-            fetch(`https://api.telegram.org/bot7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM/sendMessage?chat_id=6804374367&text=${encodeURIComponent("Asadbek Saytidan:\nIsm: "+n+"\nXabar: "+m)}`)
+            fetch(`https://api.telegram.org/bot7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM/sendMessage?chat_id=6804374367&text=${encodeURIComponent("Ism: "+n+"\nXabar: "+m)}`)
             .then(() => alert("Yuborildi! ✅"));
         }
     </script>
