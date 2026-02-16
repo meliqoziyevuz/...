@@ -111,7 +111,7 @@
     <audio id="bg-music" loop src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-15.mp3"></audio>
 
     <script>
-        // Matrix & Intro logic
+        // Matrix Intro
         const mCanvas = document.getElementById('matrix-intro-canvas');
         const mCtx = mCanvas.getContext('2d');
         mCanvas.width = window.innerWidth; mCanvas.height = window.innerHeight;
@@ -138,11 +138,10 @@
             }, 1000);
         }, 7000);
 
-        // Kursor
+        // Kursor va Sahifalar
         const cursor = document.getElementById('cursor-pointer');
         window.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
 
-        // Sahifa almashinuvi
         let currentPage = 1;
         function changePage(dir) {
             document.getElementById('p'+currentPage).classList.remove('active');
@@ -152,31 +151,50 @@
             document.getElementById('nextBtn').style.display = (currentPage === 2) ? 'none' : 'block';
         }
 
-        // TELEGRAMGA YUBORISH (Sizning botingiz ulangan)
+        // TELEGRAMGA YUBORISH (YANGI TOKEN BILAN)
         function sendToTelegram() {
-            const token = "7725172926:AAFGnwmN_4QJBi-2mZ4csK0WdYo0QA4bgCM"; 
+            const token = "7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM"; 
             const chat_id = "6064746416"; 
             const name = document.getElementById('userName').value;
             const msg = document.getElementById('userMsg').value;
             const status = document.getElementById('status');
 
-            if(!name || !msg) { alert("Iltimos, maydonlarni to'ldiring!"); return; }
+            if(!name || !msg) { alert("Iltimos, ismingiz va fikringizni yozing!"); return; }
 
-            const text = `🚀 *Yangi xabar!*\n\n👤 *Kimdan:* ${name}\n💬 *Fikr:* ${msg}`;
-            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(text)}&parse_mode=Markdown`;
+            const btn = document.getElementById('send-msg');
+            btn.innerText = "Yuborilmoqda...";
+            btn.disabled = true;
 
-            fetch(url).then(res => {
+            const text = `🚀 *Yangi fikr keldi!*\n\n👤 *Ism:* ${name}\n💬 *Xabar:* ${msg}`;
+            
+            fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: chat_id,
+                    text: text,
+                    parse_mode: 'Markdown'
+                })
+            })
+            .then(res => {
                 if(res.ok) {
-                    status.innerText = "Xabaringiz yuborildi! ✅";
+                    status.innerText = "Yuborildi! ✅";
                     status.style.display = "block";
                     document.getElementById('userName').value = "";
                     document.getElementById('userMsg').value = "";
-                    setTimeout(() => status.style.display = "none", 3000);
+                    setTimeout(() => status.style.display = "none", 4000);
+                } else {
+                    alert("Xatolik! Botga kirib /start bosganingizni tekshiring.");
                 }
-            }).catch(() => alert("Xatolik! Botni /start qilganingizga ishonch hosil qiling."));
+            })
+            .catch(() => alert("Internet aloqasini tekshiring!"))
+            .finally(() => {
+                btn.innerText = "Xabarni yuborish";
+                btn.disabled = false;
+            });
         }
 
-        // Clock & Snow Effects
+        // Soat va Qor effektlari
         function startClock() {
             const clk = document.getElementById('clock');
             const colors = ['#0f0', '#00f', '#f0f', '#ff0', '#0ff'];
