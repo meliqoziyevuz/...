@@ -28,42 +28,30 @@
         .card { width: 280px; padding: 12px; margin: 6px 0; border-radius: 12px; text-decoration: none; color: #fff; font-weight: bold; display: flex; align-items: center; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
         .card i { margin-right: 15px; font-size: 22px; }
 
-        /* 2-PAGE: RASMDAGI MEDIA ZONE */
-        .virtual-clock-header { color: #0f0; font-size: 20px; font-weight: bold; letter-spacing: 4px; text-shadow: 0 0 10px #0f0; margin-bottom: 10px; animation: glitch-text 2s infinite; }
-        
-        .clock-container { position: relative; width: 140px; height: 140px; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; }
-        .clock-ring { position: absolute; width: 100%; height: 100%; border: 2px solid #0f0; border-radius: 50%; box-shadow: 0 0 15px #0f0; background: rgba(0, 255, 0, 0.05); }
-        .clock-ring::after { content: ""; position: absolute; width: 110%; height: 110%; border: 1px dashed #0f0; border-radius: 50%; animation: rot 12s linear infinite; top: -5%; left: -5%; }
-        #big-time { font-size: 20px; font-weight: bold; color: #0f0; font-family: monospace; z-index: 2; }
-        #digital-seconds { font-size: 24px; color: #0f0; margin-bottom: 20px; font-family: monospace; text-shadow: 0 0 10px #0f0; }
+        /* 2-PAGE: SPLIT MEDIA ZONE */
+        .virtual-clock-header { color: #0f0; font-size: 18px; font-weight: bold; letter-spacing: 3px; margin-bottom: 10px; }
+        #big-time { font-size: 22px; color: #0f0; font-family: monospace; text-shadow: 0 0 10px #0f0; margin-bottom: 15px; }
 
-        .media-zone-title { color: #0f0; font-size: 14px; align-self: flex-start; margin-left: 20px; margin-bottom: 5px; letter-spacing: 2px; }
+        .media-container { width: 100%; max-width: 360px; display: flex; flex-direction: column; gap: 15px; }
 
-        .cyber-media-card { width: 100%; max-width: 360px; border: 1px solid #0f0; background: rgba(0, 255, 0, 0.02); padding: 15px; border-radius: 10px; position: relative; box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.1); }
-        .cyber-media-card::before, .cyber-media-card::after { content: ""; position: absolute; width: 20px; height: 20px; border: 2px solid #0f0; }
-        .cyber-media-card::before { top: -5px; left: -5px; border-right: 0; border-bottom: 0; }
-        .cyber-media-card::after { bottom: -5px; right: -5px; border-left: 0; border-top: 0; }
+        /* ALOHIDA RAMKALAR */
+        .cyber-panel { border: 1px solid #0f0; background: rgba(0, 255, 0, 0.03); padding: 12px; border-radius: 8px; position: relative; box-shadow: inset 0 0 15px rgba(0, 255, 0, 0.05); }
+        .cyber-panel::before { content: attr(data-label); position: absolute; top: -10px; left: 10px; background: #000; color: #0f0; font-size: 10px; padding: 0 5px; letter-spacing: 2px; border: 1px solid #0f0; }
 
-        audio { width: 100%; height: 35px; filter: invert(100%) hue-rotate(90deg) brightness(1.5); margin-bottom: 15px; }
-        video { width: 100%; border: 1px solid #0f0; border-radius: 5px; display: block; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2); }
-
-        .warning-text { color: #f00; font-size: 9px; margin-top: 10px; letter-spacing: 1px; animation: pulse 1.5s infinite; }
+        audio { width: 100%; height: 35px; filter: invert(100%) hue-rotate(90deg) brightness(1.5); }
+        video { width: 100%; border: 1px solid rgba(0,255,0,0.5); border-radius: 4px; display: block; }
 
         /* 3-PAGE CONTACT */
-        .contact-box { width: 310px; padding: 20px; background: rgba(255,255,255,0.05); border-radius: 15px; border: 1px solid #0f0; }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #111; border: 1px solid #0f0; color: #fff; border-radius: 8px; outline: none; }
-        button { width: 100%; padding: 12px; background: #0f0; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; color: #000; }
-
-        /* ANIMATIONS */
-        @keyframes rot { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes pulse { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
-        @keyframes glitch-text { 0% { transform: skew(0deg); } 20% { transform: skew(2deg); } 40% { transform: skew(-2deg); } 100% { transform: skew(0deg); } }
-        .glitch-active { animation: shake 0.2s infinite; }
-        @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(0); } }
+        .contact-box { width: 310px; padding: 25px; background: rgba(0,0,0,0.8); border-radius: 20px; border: 1.5px solid #0f0; }
+        input, textarea { width: 100%; padding: 14px; margin: 10px 0; background: #000; border: 1.5px solid #0f0; color: #fff; border-radius: 12px; outline: none; }
+        button#send-btn { width: 100%; padding: 14px; background: #0f0; border: none; font-weight: bold; cursor: pointer; border-radius: 12px; color: #000; }
 
         /* NAV */
         .nav-btn { position: fixed; top: 50%; transform: translateY(-50%); font-size: 45px; color: #0f0; cursor: pointer; z-index: 5000; opacity: 0.6; }
         #nextBtn { right: 5px; } #prevBtn { left: 5px; display: none; }
+
+        .glitch-active { animation: shake 0.2s infinite; }
+        @keyframes shake { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-1px, -1px); } 100% { transform: translate(0); } }
     </style>
 </head>
 <body>
@@ -86,37 +74,31 @@
         </div>
 
         <div class="page" id="p2">
-            <div class="virtual-clock-header">VIRTUAL CLOCK</div>
-            
-            <div class="clock-container">
-                <div class="clock-ring"></div>
-                <div id="big-time">00:00:00</div>
-            </div>
-            
-            <div id="digital-seconds">14:35:17</div>
+            <div class="virtual-clock-header">SYSTEM TIME</div>
+            <div id="big-time">00:00:00</div>
 
-            <div class="media-zone-title">MEDIA ZONE</div>
-            
-            <div class="cyber-media-card" id="media-card">
-                <audio id="myAudio" controls>
-                    <source src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/Elvin%20Mirz%C9%99zad%C9%99%20-%20D%C3%BC%C5%9F%C3%BCn%20M%C9%99ni.mp3" type="audio/mpeg">
-                </audio>
-                
-                <video id="myVideo" controls>
-                    <source src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/VID_20260217_042543_562.mp4" type="video/mp4">
-                </video>
+            <div class="media-container">
+                <div class="cyber-panel" data-label="AUDIO_STREAM" id="a-panel">
+                    <audio id="myAudio" controls>
+                        <source src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/Elvin%20Mirz%C9%99zad%C9%99%20-%20D%C3%BC%C5%9F%C3%BCn%20M%C9%99ni.mp3" type="audio/mpeg">
+                    </audio>
+                </div>
 
-                <div class="warning-text">WARNING: GLITCH DETECTED</div>
-                <div style="color: #0f0; font-size: 10px; font-weight: bold; margin-top: 5px; cursor: pointer;">EXECUTE SEND</div>
+                <div class="cyber-panel" data-label="VIDEO_FEED" id="v-panel">
+                    <video id="myVideo" controls>
+                        <source src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/VID_20260217_042543_562.mp4" type="video/mp4">
+                    </video>
+                </div>
             </div>
+            <p style="color:#0f0; font-size:9px; margin-top:10px; letter-spacing:2px; opacity:0.5;">SECURE CONNECTION ESTABLISHED</p>
         </div>
 
         <div class="page" id="p3">
             <div class="contact-box">
-                <h3 style="color:#0f0; margin-bottom:15px;">ALOQA</h3>
+                <h3 style="color:#0f0; margin-bottom:15px; text-transform:uppercase;">Aloqa</h3>
                 <input type="text" id="uName" placeholder="Ismingiz">
                 <textarea id="uMsg" rows="4" placeholder="Xabaringiz..."></textarea>
-                <button onclick="sendTele()">YUBORISH</button>
+                <button id="send-btn" onclick="sendTele()">Yuborish</button>
             </div>
         </div>
     </div>
@@ -124,12 +106,13 @@
     <script>
         const audio = document.getElementById('myAudio');
         const video = document.getElementById('myVideo');
-        const mediaCard = document.getElementById('media-card');
+        const aPanel = document.getElementById('a-panel');
+        const vPanel = document.getElementById('v-panel');
 
-        audio.onplay = () => { video.pause(); mediaCard.classList.add('glitch-active'); };
-        audio.onpause = () => { mediaCard.classList.remove('glitch-active'); };
-        video.onplay = () => { audio.pause(); mediaCard.classList.add('glitch-active'); };
-        video.onpause = () => { mediaCard.classList.remove('glitch-active'); };
+        audio.onplay = () => { video.pause(); aPanel.classList.add('glitch-active'); };
+        audio.onpause = () => { aPanel.classList.remove('glitch-active'); };
+        video.onplay = () => { audio.pause(); vPanel.classList.add('glitch-active'); };
+        video.onpause = () => { vPanel.classList.remove('glitch-active'); };
 
         // Matrix Background
         const mCanvas = document.getElementById('matrix-canvas');
@@ -147,22 +130,16 @@
         }
         setInterval(drawMatrix, 50);
 
-        // Intro Logic
         setTimeout(() => {
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('main-content').style.display = 'block';
             setTimeout(() => { document.getElementById('main-content').style.opacity = '1'; }, 50);
         }, 5000);
 
-        // Clock Logic
         setInterval(() => {
-            const now = new Date();
-            const timeStr = now.toLocaleTimeString('uz-UZ', { hour12: false });
-            document.getElementById('big-time').innerText = timeStr;
-            document.getElementById('digital-seconds').innerText = timeStr;
+            document.getElementById('big-time').innerText = new Date().toLocaleTimeString('uz-UZ', { hour12: false });
         }, 1000);
 
-        // Navigation
         let curr = 1;
         function movePage(s) {
             document.getElementById('p'+curr).style.display = 'none';
@@ -173,12 +150,20 @@
             audio.pause(); video.pause();
         }
 
-        // Telegram Send
         function sendTele() {
-            const n = document.getElementById('uName').value;
-            const m = document.getElementById('uMsg').value;
+            const nameField = document.getElementById('uName');
+            const msgField = document.getElementById('uMsg');
+            const n = nameField.value;
+            const m = msgField.value;
+
+            if(n === "" || m === "") { alert("To'ldiring!"); return; }
+
             fetch(`https://api.telegram.org/bot7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM/sendMessage?chat_id=6804374367&text=User: ${n}%0AMessage: ${m}`)
-            .then(() => alert("Yuborildi!"));
+            .then(() => {
+                alert("Yuborildi!");
+                nameField.value = ""; 
+                msgField.value = "";
+            });
         }
     </script>
 </body>
