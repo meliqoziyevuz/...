@@ -40,8 +40,10 @@
         .nav-btn { position: fixed; top: 50%; transform: translateY(-50%); font-size: 45px; color: #0f0; cursor: pointer; z-index: 5000; opacity: 0.6; }
         #nextBtn { right: 25px; } #prevBtn { left: 25px; display: none; }
 
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #111; border: 1px solid #0f0; color: #fff; border-radius: 8px; outline: none; }
-        button { width: 100%; padding: 12px; background: #0f0; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; color: #000; }
+        /* FORM */
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #111; border: 1px solid #0f0; color: #fff; border-radius: 8px; outline: none; font-family: inherit; }
+        button { width: 100%; padding: 12px; background: #0f0; border: none; font-weight: bold; cursor: pointer; border-radius: 8px; color: #000; transition: 0.3s; }
+        button:disabled { background: #050; cursor: not-allowed; opacity: 0.7; }
 
         #clock { position: fixed; top: 15px; right: 20px; color: #0f0; font-family: monospace; font-size: 18px; z-index: 100; }
         #site-name { position: fixed; top: 15px; left: 20px; color: #0f0; font-size: 16px; font-weight: bold; z-index: 100; }
@@ -94,7 +96,7 @@
                 <h3 style="color:#0f0; margin-bottom:15px;">Fikr bildirish</h3>
                 <input type="text" id="uName" placeholder="Ismingiz">
                 <textarea id="uMsg" rows="4" placeholder="Xabaringiz..."></textarea>
-                <button onclick="sendTele()">Yuborish</button>
+                <button id="sendBtn" onclick="sendTele()">Yuborish</button>
             </div>
         </div>
     </div>
@@ -128,6 +130,7 @@
             }, 1500);
         }, 7000); 
 
+        // NAVIGATION
         let current = 1;
         function movePage(step) {
             document.getElementById('p' + current).classList.remove('active');
@@ -137,25 +140,45 @@
             document.getElementById('nextBtn').style.display = (current === 3) ? 'none' : 'block';
         }
 
-        // TELEGRAMGA YUBORISH (YANGI TOKEN VA ID)
+        // TELEGRAM SEND WITH CLEAR FORM
         function sendTele() {
-            const n = document.getElementById('uName').value;
-            const m = document.getElementById('uMsg').value;
-            if(!n || !m) { alert("Iltimos, ism va xabarni yozing!"); return; }
+            const nameInput = document.getElementById('uName');
+            const msgInput = document.getElementById('uMsg');
+            const btn = document.getElementById('sendBtn');
+            
+            const n = nameInput.value.trim();
+            const m = msgInput.value.trim();
 
-            // SKRINSHOTINGIZDAGI YANGI MA'LUMOTLAR
+            if(!n || !m) { alert("Iltimos, barcha maydonlarni to'ldiring!"); return; }
+
+            // Loading holati
+            btn.innerText = "Yuborilmoqda...";
+            btn.disabled = true;
+
             const token = "7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM"; 
             const cid = "6804374367"; 
             const text = `🚀 Saytdan xabar:\n👤 Ism: ${n}\n💬 Xabar: ${m}`;
 
             fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${cid}&text=${encodeURIComponent(text)}`)
             .then(res => { 
-                if(res.ok) alert("Xabar @Matrixff_bot orqali yuborildi! ✅"); 
-                else alert("Xato! @Matrixff_bot botiga kirib /start bosing."); 
+                if(res.ok) {
+                    alert("Xabaringiz muvaffaqiyatli yuborildi! ✅");
+                    // FORMADAGI YOZUVLARNI TOZALASH
+                    nameInput.value = ""; 
+                    msgInput.value = "";
+                } else { 
+                    alert("Xato! Botga kirib /start bosing."); 
+                }
             })
-            .catch(() => alert("Ulanishda xato!"));
+            .catch(() => alert("Internet ulanishida xato!"))
+            .finally(() => {
+                // Tugmani asliga qaytarish
+                btn.innerText = "Yuborish";
+                btn.disabled = false;
+            });
         }
 
+        // CLOCK & SNOW
         setInterval(() => { document.getElementById('clock').innerText = new Date().toLocaleTimeString(); }, 1000);
         function initSnow() {
             const sCanvas = document.getElementById('bg-snow');
