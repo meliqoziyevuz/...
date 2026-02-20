@@ -58,4 +58,132 @@
 
     <div id="main-content">
         <i class="fas fa-chevron-left nav-btn" id="prevBtn" onclick="movePage(-1)"></i>
-        <i class="fas fa-chevron-right nav-btn" id="nextBtn" onclick="movePage(1)"></i>
+        <i class="fas fa-chevron-right nav-btn" id="nextBtn" onclick="movePage(1)"></i><div class="page active" id="p1">
+            <img src="https://img.freepik.com/free-vector/hacker-operating-laptop-cartoon-icon-illustration_138676-2387.jpg" class="avatar">
+            <h2 style="color:#0f0; margin-bottom: 15px;">Asadbek</h2>
+            <a href="https://instagram.com/ezz_mafiya" class="card"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="https://t.me/Pain_2007" class="card"><i class="fab fa-telegram"></i> Telegram</a>
+            <a href="https://youtube.com/@meliqoziyev" class="card"><i class="fab fa-youtube"></i> YouTube</a>
+        </div>
+
+        <div class="page" id="p2">
+            <div id="big-time">00:00:00</div>
+            <div class="cyber-panel" data-label="AUDIO">
+                <audio id="myAudio" controls><source src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/Elvin%20Mirz%C9%99zad%C9%99%20-%20D%C3%BC%C5%9F%C3%BCn%20M%C9%99ni.mp3" type="audio/mpeg"></audio>
+            </div>
+            <div class="cyber-panel" data-label="VIDEO">
+                <video id="video-player" poster="https://img.freepik.com/free-vector/digital-futuristic-background_23-2148403328.jpg" preload="metadata" onclick="togglePlay()">
+                    <source id="video-source" src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/VID_20260217_042543_562.mp4" type="video/mp4">
+                </video>
+                <div class="video-controls">
+                    <button class="v-nav-btn" onclick="changeVideo(-1)"><i class="fas fa-caret-left"></i></button>
+                    <button class="v-nav-btn" onclick="togglePlay()" id="play-pause-btn"><i class="fas fa-play"></i></button>
+                    <button class="v-nav-btn" onclick="changeVideo(1)"><i class="fas fa-caret-right"></i></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="page" id="p3">
+            <div style="background:rgba(0,0,0,0.8); padding:20px; border:1px solid #0f0; border-radius:15px; width:300px;">
+                <h3 style="color:#0f0; margin-bottom:10px;">ALOQA</h3>
+                <input type="text" id="uName" placeholder="Ismingiz" style="width:100%; padding:10px; margin:5px 0; background:#000; border:1px solid #0f0; color:#fff;">
+                <textarea id="uMsg" placeholder="Xabar..." style="width:100%; padding:10px; margin:5px 0; background:#000; border:1px solid #0f0; color:#fff;"></textarea>
+                <button onclick="sendTele()" style="width:100%; padding:10px; background:#0f0; border:none; font-weight:bold; cursor:pointer;">YUBORISH</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- MATRIX (INTRO UCHUN) ---
+        const mCanvas = document.getElementById('matrix-canvas');
+        const mCtx = mCanvas.getContext('2d');
+        mCanvas.width = window.innerWidth; mCanvas.height = window.innerHeight;
+        const matrixDrops = new Array(Math.floor(mCanvas.width / 20)).fill(1);
+        function drawMatrix() {
+            mCtx.fillStyle = 'rgba(0, 0, 0, 0.1)'; mCtx.fillRect(0, 0, mCanvas.width, mCanvas.height);
+            mCtx.fillStyle = '#0f0'; mCtx.font = '20px monospace';
+            matrixDrops.forEach((y, i) => {
+                mCtx.fillText(Math.floor(Math.random()*2), i*20, y*20);
+                if(y*20 > mCanvas.height && Math.random() > 0.975) matrixDrops[i] = 0;
+                matrixDrops[i]++;
+            });
+        }
+        let matrixInterval = setInterval(drawMatrix, 50);
+
+        // --- SNOW (ASOSIY FON UCHUN) ---
+        const sCanvas = document.getElementById('snow-canvas');
+        const sCtx = sCanvas.getContext('2d');
+        sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight;
+        let particles = [];
+        class Particle {
+            constructor(x, y, r, dx, dy) { this.x = x; this.y = y; this.r = r; this.dx = dx; this.dy = dy; this.opacity = Math.random(); }draw() { sCtx.beginPath(); sCtx.arc(this.x, this.y, this.r, 0, Math.PI*2); sCtx.fillStyle = rgba(255,255,255,${this.opacity}); sCtx.fill(); }
+            update() { this.x += this.dx; this.y += this.dy; if (this.y > sCanvas.height) { this.y = -10; this.x = Math.random() * sCanvas.width; } this.draw(); }
+        }
+        for(let i=0; i<100; i++) particles.push(new Particle(Math.random()*sCanvas.width, Math.random()*sCanvas.height, Math.random()*3, Math.random()*1-0.5, Math.random()*2+1));
+        
+        function animateSnow() { sCtx.clearRect(0, 0, sCanvas.width, sCanvas.height); particles.forEach(p => p.update()); requestAnimationFrame(animateSnow); }
+        animateSnow();
+
+        // BOSSA QOR SACHRASHI
+        window.addEventListener('mousedown', (e) => {
+            for(let i=0; i<10; i++) {
+                let p = new Particle(e.clientX, e.clientY, Math.random()*3, (Math.random()-0.5)*8, (Math.random()-0.5)*8);
+                particles.push(p); setTimeout(() => { particles.splice(particles.indexOf(p), 1); }, 800);
+            }
+        });
+
+        // --- INTRO TUGASHI ---
+        setTimeout(() => {
+            clearInterval(matrixInterval);
+            mCanvas.style.transition = "2s";
+            mCanvas.style.opacity = "0";
+            document.getElementById('intro-screen').style.display = 'none';
+            setTimeout(() => { 
+                mCanvas.style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                setTimeout(() => { document.getElementById('main-content').style.opacity = '1'; }, 50);
+            }, 2000);
+        }, 5000);
+
+        // --- VIDEO PLAYER ---
+        const video = document.getElementById('video-player');
+        const vSource = document.getElementById('video-source');
+        const ppBtn = document.getElementById('play-pause-btn');
+        const audio = document.getElementById('myAudio');
+        const playlist = [
+            "https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/VID_20260217_042543_562.mp4",
+            "https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/VID_20260217_211420_755.mp4"
+        ];
+        let currentIdx = 0;
+
+        function togglePlay() {
+            if (video.paused) { video.play(); audio.pause(); ppBtn.innerHTML = '<i class="fas fa-pause"></i>'; }
+            else { video.pause(); ppBtn.innerHTML = '<i class="fas fa-play"></i>'; }
+        }
+
+        function changeVideo(step) {
+            currentIdx = (currentIdx + step + playlist.length) % playlist.length;
+            video.pause(); vSource.src = playlist[currentIdx]; video.load();
+            ppBtn.innerHTML = '<i class="fas fa-play"></i>';
+        }
+
+        // --- UTILS ---
+        setInterval(() => { document.getElementById('big-time').innerText = new Date().toLocaleTimeString('uz-UZ', { hour12: false }); }, 1000);
+        function movePage(s) {
+            let curr = document.querySelector('.page.active');
+            let nextNum = parseInt(curr.id.replace('p', '')) + s;
+            curr.classList.remove('active');
+            document.getElementById('p'+nextNum).classList.add('active');
+            document.getElementById('prevBtn').style.display = (nextNum==1)?'none':'block';
+            document.getElementById('nextBtn').style.display = (nextNum==3)?'none':'block';
+            video.pause(); audio.pause();
+        }
+        function sendTele() {
+            const n = document.getElementById('uName'), m = document.getElementById('uMsg');
+            if(!n.value || !m.value) return;
+            fetch(https://api.telegram.org/bot7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM/sendMessage?chat_id=6804374367&text=User: ${n.value}%0AMessage: ${m.value})
+            .then(() => { alert("Yuborildi!"); n.value = ""; m.value = ""; });
+        }
+    </script>
+</body>
+</html>
