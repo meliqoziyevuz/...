@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Asadbek | meliqoziyev.uz</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
@@ -13,6 +18,12 @@
         canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
         #matrix-canvas { z-index: 10005; background: #000; } 
         #snow-canvas { z-index: 1; pointer-events: none; } 
+        
+        /* 4-BO'LIM ELEMENTLARI */
+        #canvas-3d { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; display: none; }
+        #output_canvas { position: fixed; bottom: 10px; right: 10px; width: 120px; border: 2px solid #0f0; border-radius: 10px; z-index: 1000; transform: scaleX(-1); display: none; background: #000; }
+        #input_video { display: none; }
+        #p4-hint { position: absolute; top: 20px; color: #0f0; font-family: monospace; display: none; z-index: 1001; text-shadow: 0 0 10px #0f0; width: 100%; text-align: center; }
 
         /* INTRO TEXT */
         #intro-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10010; display: flex; justify-content: center; align-items: center; pointer-events: none; }
@@ -55,6 +66,10 @@
 
     <canvas id="matrix-canvas"></canvas>
     <canvas id="snow-canvas"></canvas>
+    <video id="input_video"></video>
+    <canvas id="output_canvas"></canvas>
+    <div id="canvas-3d"></div>
+    <div id="p4-hint">4-BO'LIM: AI 3D CONTROL<br>Qo'lingizni havoda harakatlantiring</div>
 
     <div id="intro-screen">
         <div class="intro-content"><div class="t1">Assalomu Alaykum</div></div>
@@ -97,6 +112,9 @@
                 <button onclick="sendTele()" style="width:100%; padding:14px; background:#0f0; border:none; font-weight:bold; cursor:pointer; border-radius:8px; color:#000; transition: 0.3s;">YUBORISH</button>
             </div>
         </div>
+
+        <div class="page" id="p4">
+            </div>
     </div>
 
     <script>
@@ -193,14 +211,33 @@
 
         setInterval(() => { document.getElementById('big-time').innerText = new Date().toLocaleTimeString('uz-UZ', { hour12: false }); }, 1000);
         
+        // --- NAVIGATION LOGIC ---
         function movePage(s) {
             let curr = document.querySelector('.page.active');
-            let nextNum = parseInt(curr.id.replace('p', '')) + s;
+            let currNum = parseInt(curr.id.replace('p', ''));
+            let nextNum = currNum + s;
+
+            if(nextNum < 1 || nextNum > 4) return;
+
             curr.classList.remove('active');
             document.getElementById('p'+nextNum).classList.add('active');
+
             document.getElementById('prevBtn').style.display = (nextNum==1)?'none':'block';
-            document.getElementById('nextBtn').style.display = (nextNum==3)?'none':'block';
+            document.getElementById('nextBtn').style.display = (nextNum==4)?'none':'block';
+
             video.pause(); audio.pause();
+
+            // 4-bo'lim boshqaruvi
+            if(nextNum === 4) {
+                document.getElementById('canvas-3d').style.display = 'block';
+                document.getElementById('output_canvas').style.display = 'block';
+                document.getElementById('p4-hint').style.display = 'block';
+                startAICamera();
+            } else {
+                document.getElementById('canvas-3d').style.display = 'none';
+                document.getElementById('output_canvas').style.display = 'none';
+                document.getElementById('p4-hint').style.display = 'none';
+            }
         }
 
         function sendTele() {
@@ -209,6 +246,67 @@
             fetch(`https://api.telegram.org/bot7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM/sendMessage?chat_id=6804374367&text=User: ${n.value}%0AMessage: ${m.value}`)
             .then(() => { alert("Yuborildi!"); n.value = ""; m.value = ""; });
         }
+
+        // --- 4-BO'LIM: THREE.JS & MEDIA PIPE ---
+        let cameraActive = false;
+        const scene = new THREE.Scene();
+        const camera3d = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-3d').appendChild(renderer.domElement);
+
+        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+        camera3d.position.z = 5;
+
+        const videoElement = document.getElementById('input_video');
+        const canvasElement = document.getElementById('output_canvas');
+        const canvasCtx = canvasElement.getContext('2d');
+
+        function onResults(results) {
+            canvasCtx.save();
+            canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+            canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                const x = landmarks[8].x;
+                const y = landmarks[8].y;
+                cube.rotation.y = (x - 0.5) * 8;
+                cube.rotation.x = (y - 0.5) * 8;
+            }
+            canvasCtx.restore();
+        }
+
+        const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
+        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5 });
+        hands.onResults(onResults);
+
+        const cameraAI = new Camera(videoElement, {
+            onFrame: async () => { await hands.send({image: videoElement}); },
+            width: 640, height: 480
+        });
+
+        function startAICamera() {
+            if(!cameraActive) {
+                cameraAI.start();
+                cameraActive = true;
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.y += 0.01;
+            renderer.render(scene, camera3d);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera3d.aspect = window.innerWidth / window.innerHeight;
+            camera3d.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
     </script>
 </body>
 </html>
