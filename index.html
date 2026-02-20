@@ -3,36 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Asadbek | kiber-control</title>
+    <title>Asadbek | 4-Bo'lim 3D</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"></script>
 
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #000; color: #fff; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
 
-        /* CAMERA SENSOR OYNASI */
-        #output_canvas { position: fixed; top: 10px; right: 10px; width: 120px; height: 90px; border: 2px solid #0f0; z-index: 10000; border-radius: 10px; background: #000; transform: scaleX(-1); }
+        /* FON VA EFFEKTLAR */
+        canvas#snow-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
+        #canvas-3d { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; display: none; }
+        #output_canvas { position: fixed; bottom: 10px; right: 10px; width: 120px; border: 2px solid #0f0; border-radius: 10px; z-index: 1000; transform: scaleX(-1); display: none; }
         #input_video { display: none; }
 
-        canvas#snow-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; pointer-events: none; }
-        
         /* MAIN CONTENT */
-        #main-content { display: block; opacity: 1; height: 100vh; width: 100%; position: relative; z-index: 100; }
+        #main-content { height: 100vh; width: 100%; position: relative; z-index: 100; }
         .page { position: absolute; width: 100%; height: 100%; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 15px; text-align: center; }
         .active { display: flex; }
 
-        .avatar { width: 110px; border-radius: 50%; border: 3px solid #0f0; margin-bottom: 15px; box-shadow: 0 0 20px #0f0; }
-        .cyber-panel { border: 1px solid #0f0; background: rgba(0, 0, 0, 0.7); padding: 12px; border-radius: 12px; position: relative; width: 100%; max-width: 380px; margin-bottom: 20px; }
-        #video-player { width: 100%; border-radius: 8px; border: 1px solid #0f0; cursor: pointer; }
-        
-        .nav-btn { position: fixed; top: 50%; transform: translateY(-50%); font-size: 45px; color: #0f0; cursor: pointer; z-index: 5000; }
-        #nextBtn { right: 15px; } #prevBtn { left: 15px; }
+        .avatar { width: 100px; border-radius: 50%; border: 3px solid #0f0; margin-bottom: 15px; box-shadow: 0 0 20px #0f0; }
+        .card { width: 280px; padding: 12px; margin: 6px 0; border-radius: 12px; text-decoration: none; color: #fff; background: rgba(0, 255, 0, 0.1); border: 1px solid #0f0; display: flex; align-items: center; }
+        .card i { margin-right: 15px; }
 
-        #gesture-status { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); color: #0f0; font-family: monospace; font-size: 14px; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; border: 1px solid #0f0; z-index: 10001; }
+        /* NAVIGATION */
+        .nav-btn { position: fixed; top: 50%; transform: translateY(-50%); font-size: 40px; color: #0f0; cursor: pointer; z-index: 5000; }
+        #nextBtn { right: 15px; } #prevBtn { left: 15px; display: none; }
+
+        #p4-hint { position: absolute; top: 20px; color: #0f0; font-family: monospace; display: none; z-index: 1001; text-shadow: 0 0 10px #0f0; }
     </style>
 </head>
 <body>
@@ -40,7 +41,8 @@
     <video id="input_video"></video>
     <canvas id="output_canvas"></canvas>
     <canvas id="snow-canvas"></canvas>
-    <div id="gesture-status">AI Sensor: Yuklanmoqda...</div>
+    <div id="canvas-3d"></div>
+    <div id="p4-hint">4-BO'LIM: AI 3D CONTROL<br>Qo'lingizni havoda harakatlantiring</div>
 
     <div id="main-content">
         <i class="fas fa-chevron-left nav-btn" id="prevBtn" onclick="movePage(-1)"></i>
@@ -48,100 +50,117 @@
 
         <div class="page active" id="p1">
             <img src="https://img.freepik.com/free-vector/hacker-operating-laptop-cartoon-icon-illustration_138676-2387.jpg" class="avatar">
-            <h2 style="color:#0f0; text-shadow: 0 0 10px #0f0;">ASADBEK</h2>
-            <p style="color:#0f0; margin-top:20px; font-size:12px;">Qo'lingizni chapga/o'ngga silkiting</p>
+            <h2 style="color:#0f0;">ASADBEK</h2>
+            <a href="#" class="card"><i class="fab fa-instagram"></i> Instagram</a>
+            <a href="#" class="card"><i class="fab fa-telegram"></i> Telegram</a>
         </div>
 
         <div class="page" id="p2">
-            <div class="cyber-panel" data-label="VIDEO">
-                <video id="video-player" poster="https://img.freepik.com/free-vector/digital-futuristic-background_23-2148403328.jpg" preload="metadata" onclick="togglePlay()">
-                    <source id="video-source" src="https://raw.githubusercontent.com/meliqoziyevuz/Asadbek/main/VID_20260217_042543_562.mp4" type="video/mp4">
-                </video>
-            </div>
-            <p style="color:#0f0; font-size:12px;">Barmog'ingizni tepaga ko'tarsangiz: Play/Pause</p>
+            <h2 style="color:#0f0;">MEDIA BO'LIMI</h2>
+            <p>Video va Audio pleyer bu yerda bo'ladi.</p>
         </div>
+
+        <div class="page" id="p3">
+            <h2 style="color:#0f0;">ALOQA</h2>
+            <p>Xabar yuborish bo'limi.</p>
+        </div>
+
+        <div class="page" id="p4">
+            </div>
     </div>
 
     <script>
+        // --- 3D SCENE (THREE.JS) ---
+        const scene = new THREE.Scene();
+        const camera3d = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-3d').appendChild(renderer.domElement);
+
+        const geometry = new THREE.BoxGeometry(2, 2, 2);
+        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+        const cube = new THREE.Mesh(geometry, material);
+        scene.add(cube);
+        camera3d.position.z = 5;
+
+        // --- AI HAND TRACKING ---
         const videoElement = document.getElementById('input_video');
         const canvasElement = document.getElementById('output_canvas');
         const canvasCtx = canvasElement.getContext('2d');
-        const status = document.getElementById('gesture-status');
-        const vPlayer = document.getElementById('video-player');
-
-        let lastAction = 0;
 
         function onResults(results) {
             canvasCtx.save();
             canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
             canvasCtx.drawImage(results.image, 0, 0, canvasElement.width, canvasElement.height);
-            
             if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
-                status.innerText = "AI Sensor: Qo'l aniqlandi";
                 const landmarks = results.multiHandLandmarks[0];
-                drawConnectors(canvasCtx, landmarks, HAND_CONNECTIONS, {color: '#00FF00', lineWidth: 2});
-                drawLandmarks(canvasCtx, landmarks, {color: '#FF0000', radius: 2});
-
-                const indexTip = landmarks[8]; // Ko'rsatkich barmog'i uchi
-                const now = Date.now();
-
-                if (now - lastAction > 1500) { // Har 1.5 sekunda faqat bitta buyruq
-                    // O'NGGA (Faqat x koordinata bo'yicha)
-                    if (indexTip.x < 0.2) { 
-                        status.innerText = "Buyruq: Keyingi";
-                        movePage(1); lastAction = now;
-                    } 
-                    // CHAPGA
-                    else if (indexTip.x > 0.8) {
-                        status.innerText = "Buyruq: Oldingi";
-                        movePage(-1); lastAction = now;
-                    }
-                    // TEPAGA (Y koordinata kichik bo'lsa tepa degani)
-                    else if (indexTip.y < 0.2) {
-                        status.innerText = "Buyruq: Play/Pause";
-                        togglePlay(); lastAction = now;
-                    }
-                }
-            } else {
-                status.innerText = "AI Sensor: Qo'l ko'rinmayapti";
+                const x = landmarks[8].x;
+                const y = landmarks[8].y;
+                cube.rotation.y = (x - 0.5) * 10;
+                cube.rotation.x = (y - 0.5) * 10;
             }
             canvasCtx.restore();
         }
 
         const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
-        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5, minTrackingConfidence: 0.5 });
+        hands.setOptions({ maxNumHands: 1, modelComplexity: 1, minDetectionConfidence: 0.5 });
         hands.onResults(onResults);
 
         const camera = new Camera(videoElement, {
             onFrame: async () => { await hands.send({image: videoElement}); },
             width: 640, height: 480
         });
-        camera.start();
 
+        // --- NAVIGATION LOGIC ---
         function movePage(s) {
-            let p1 = document.getElementById('p1'), p2 = document.getElementById('p2');
-            if(s > 0) { p1.classList.remove('active'); p2.classList.add('active'); }
-            else { p2.classList.remove('active'); p1.classList.add('active'); }
+            let curr = document.querySelector('.page.active');
+            let currNum = parseInt(curr.id.replace('p', ''));
+            let nextNum = currNum + s;
+
+            if(nextNum < 1 || nextNum > 4) return;
+
+            curr.classList.remove('active');
+            document.getElementById('p'+nextNum).classList.add('active');
+
+            document.getElementById('prevBtn').style.display = (nextNum==1)?'none':'block';
+            document.getElementById('nextBtn').style.display = (nextNum==4)?'none':'block';
+
+            // 4-bo'limga o'tganda kamerani va 3Dni yoqish
+            if(nextNum === 4) {
+                document.getElementById('canvas-3d').style.display = 'block';
+                document.getElementById('output_canvas').style.display = 'block';
+                document.getElementById('p4-hint').style.display = 'block';
+                camera.start();
+            } else {
+                document.getElementById('canvas-3d').style.display = 'none';
+                document.getElementById('output_canvas').style.display = 'none';
+                document.getElementById('p4-hint').style.display = 'none';
+            }
         }
 
-        function togglePlay() {
-            if (vPlayer.paused) vPlayer.play();
-            else vPlayer.pause();
+        function animate() {
+            requestAnimationFrame(animate);
+            cube.rotation.y += 0.01; // Avto aylanish
+            renderer.render(scene, camera3d);
         }
+        animate();
 
-        // QOR EFFEKTI (Siz yoqtirganingiz)
+        // --- QOR EFFEKTI ---
         const sCanvas = document.getElementById('snow-canvas');
         const sCtx = sCanvas.getContext('2d');
         sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight;
-        let pArr = [];
-        class P {
-            constructor() { this.x = Math.random()*sCanvas.width; this.y = Math.random()*sCanvas.height; this.r = Math.random()*3; this.dy = Math.random()*1+1; }
-            draw() { sCtx.beginPath(); sCtx.arc(this.x, this.y, this.r, 0, Math.PI*2); sCtx.fillStyle = "white"; sCtx.fill(); }
-            up() { this.y += this.dy; if(this.y > sCanvas.height) this.y = -5; this.draw(); }
+        let particles = [];
+        for(let i=0; i<50; i++) particles.push({x:Math.random()*sCanvas.width, y:Math.random()*sCanvas.height, r:Math.random()*3, d:Math.random()*1+1});
+        function drawSnow() {
+            sCtx.clearRect(0,0,sCanvas.width,sCanvas.height);
+            sCtx.fillStyle = "white";
+            particles.forEach(p => {
+                sCtx.beginPath(); sCtx.arc(p.x, p.y, p.r, 0, Math.PI*2); sCtx.fill();
+                p.y += p.d; if(p.y > sCanvas.height) p.y = -5;
+            });
+            requestAnimationFrame(drawSnow);
         }
-        for(let i=0; i<50; i++) pArr.push(new P());
-        function anim() { sCtx.clearRect(0,0,sCanvas.width,sCanvas.height); pArr.forEach(p => p.up()); requestAnimationFrame(anim); }
-        anim();
+        drawSnow();
     </script>
 </body>
 </html>
