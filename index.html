@@ -18,7 +18,7 @@
         canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; }
         #snow-canvas { z-index: 1; pointer-events: none; } 
         #canvas-3d { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; display: none; background: #000; }
-        #output_canvas, #input_video { display: none !important; }
+        #input_video { display: none !important; }
 
         /* ASOSIY KONTENT */
         #main-content { height: 100vh; width: 100%; position: relative; z-index: 100; }
@@ -45,6 +45,9 @@
         input, textarea { width: 100%; padding: 10px; margin: 5px 0; background: #000; border: 1px solid #0f0; color: #fff; border-radius: 5px; outline: none; }
         .send-btn { width: 100%; padding: 10px; background: #0f0; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; color: #000; margin-top: 5px; }
         .heart-active { color: #ff0000 !important; transform: scale(1.2); text-shadow: 0 0 15px #ff0000; }
+
+        /* 4-BO'LIM UCHUN MAXSUS STIL */
+        #cam-status { position: absolute; bottom: 80px; font-family: monospace; color: #0f0; font-size: 14px; z-index: 1001; }
     </style>
 </head>
 <body>
@@ -60,9 +63,9 @@
         <div class="page active" id="p1">
             <img src="https://img.freepik.com/free-vector/hacker-operating-laptop-cartoon-icon-illustration_138676-2387.jpg" class="avatar">
             <h2 style="color:#0f0; margin-bottom:10px; letter-spacing: 3px;">ASADBEK</h2>
-            <a href="https://instagram.com/ezz_mafiya" class="card"><i class="fab fa-instagram" style="color:#E1306C"></i> Instagram</a>
-            <a href="https://t.me/Pain_2007" class="card"><i class="fab fa-telegram" style="color:#0088cc"></i> Telegram</a>
-            <a href="https://youtube.com/@meliqoziyev" class="card"><i class="fab fa-youtube" style="color:#FF0000"></i> YouTube</a>
+            <a href="https://instagram.com/ezz_mafiya" class="card"><i class="fab fa-instagram" style="color:#E1306C; margin-right: 10px;"></i> Instagram</a>
+            <a href="https://t.me/Pain_2007" class="card"><i class="fab fa-telegram" style="color:#0088cc; margin-right: 10px;"></i> Telegram</a>
+            <a href="https://youtube.com/@meliqoziyev" class="card"><i class="fab fa-youtube" style="color:#FF0000; margin-right: 10px;"></i> YouTube</a>
         </div>
 
         <div class="page" id="p2">
@@ -92,18 +95,19 @@
             <div class="cyber-panel" data-label="Contact Me">
                 <input type="text" id="uName" placeholder="Ismingiz">
                 <textarea id="uMsg" placeholder="Xabaringiz..."></textarea>
-                <button class="send-btn" onclick="alert('Yuborildi!')">YUBORISH</button>
+                <button class="send-btn" onclick="sendMessage()">YUBORISH</button>
             </div>
         </div>
 
         <div class="page" id="p4">
-            <h3 style="color:#0f0; position:absolute; top:20px; width:100%; text-align:center; z-index:1001; font-family: monospace;">SYSTEM: DEEP SPACE EXPLORATION</h3>
-            <p style="color:#0f0; position:absolute; bottom:30px; width:100%; text-align:center; z-index:1001; font-size: 12px;">Qo'lingiz bilan yulduzlarni boshqaring</p>
+            <h3 style="color:#0f0; position:absolute; top:20px; width:100%; text-align:center; z-index:1001; font-family: monospace; letter-spacing: 5px;">NEON CRYSTAL CORE</h3>
+            <div id="cam-status">Kamera yuklanmoqda...</div>
+            <p style="color:#0f0; position:absolute; bottom:30px; width:100%; text-align:center; z-index:1001; font-size: 12px; opacity: 0.7;">Qo'lingizni ekranga qarating va boshqaring</p>
         </div>
     </div>
 
     <script>
-        // VIDEO VA AUDIO SOZLAMALARI
+        // --- 1, 2, 3-BO'LIM FUNKSIYALARI (TEGILMADI) ---
         const video = document.getElementById('mainVideo');
         const videoSrc = document.getElementById('videoSrc');
         const playBtn = document.getElementById('playBtn');
@@ -129,13 +133,18 @@
             const h = document.getElementById('heart-icon');
             h.classList.toggle('heart-active');
         }
+        function sendMessage() {
+            alert('Xabar yuborildi!');
+            document.getElementById('uName').value = "";
+            document.getElementById('uMsg').value = "";
+        }
 
-        // QOR EFFEKTI
+        // --- QOR EFFEKTI ---
         const sCanvas = document.getElementById('snow-canvas');
         const sCtx = sCanvas.getContext('2d');
         sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight;
         let snow = [];
-        for(let i=0; i<100; i++) snow.push({x: Math.random()*sCanvas.width, y: Math.random()*sCanvas.height, r: Math.random()*2+1, s: Math.random()*1+0.5});
+        for(let i=0; i<80; i++) snow.push({x: Math.random()*sCanvas.width, y: Math.random()*sCanvas.height, r: Math.random()*2+1, s: Math.random()*1+0.5});
         function drawSnow() {
             sCtx.clearRect(0,0,sCanvas.width,sCanvas.height);
             sCtx.fillStyle = "white";
@@ -147,62 +156,110 @@
         }
         drawSnow();
 
-        // KOINOT (THREE.JS)
-        let scene, camera3d, renderer, stars, starGeo, camActive = false;
-        function initKoinot() {
+        // --- 4-BO'LIM: NEON CRYSTAL (THREE.JS YANGI SHAKL) ---
+        let scene, camera3d, renderer, crystal, points, camActive = false;
+
+        function initCrystalEffect() {
             scene = new THREE.Scene();
-            camera3d = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 1, 1000);
-            camera3d.position.z = 1; camera3d.rotation.x = Math.PI/2;
-            renderer = new THREE.WebGLRenderer();
+            camera3d = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera3d.position.z = 3;
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setSize(window.innerWidth, window.innerHeight);
             document.getElementById('canvas-3d').innerHTML = "";
             document.getElementById('canvas-3d').appendChild(renderer.domElement);
-            starGeo = new THREE.BufferGeometry();
-            let positions = new Float32Array(5000 * 3);
-            for(let i=0; i<15000; i++) positions[i] = Math.random() * 600 - 300;
-            starGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            stars = new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.7}));
-            scene.add(stars);
-        }
-        function animateKoinot() {
-            let positions = starGeo.attributes.position.array;
-            for(let i=0; i<5000; i++) {
-                positions[i*3+2] += (stars.userData.speed || 0.5);
-                if (positions[i*3+2] > 200) positions[i*3+2] = -200;
-            }
-            starGeo.attributes.position.needsUpdate = true;
-            renderer.render(scene, camera3d);
-            if(camActive) requestAnimationFrame(animateKoinot);
+
+            // Markaziy Kristal (Icosahedron)
+            const geo = new THREE.IcosahedronGeometry(1, 0);
+            const mat = new THREE.MeshPhongMaterial({
+                color: 0x00ff00,
+                wireframe: true,
+                emissive: 0x00ff00,
+                emissiveIntensity: 0.5
+            });
+            crystal = new THREE.Mesh(geo, mat);
+            scene.add(crystal);
+
+            // Atrofdagi rangli nuqtalar
+            const pGeo = new THREE.BufferGeometry();
+            const pCount = 1000;
+            const pPos = new Float32Array(pCount * 3);
+            for(let i=0; i<pCount*3; i++) pPos[i] = (Math.random() - 0.5) * 10;
+            pGeo.setAttribute('position', new THREE.BufferAttribute(pPos, 3));
+            
+            const pMat = new THREE.PointsMaterial({ size: 0.05, color: 0x00ffff });
+            points = new THREE.Points(pGeo, pMat);
+            scene.add(points);
+
+            // Yorug'lik
+            const light = new THREE.PointLight(0xff00ff, 2, 10);
+            light.position.set(2, 2, 2);
+            scene.add(light);
+            scene.add(new THREE.AmbientLight(0x404040));
         }
 
-        // HAND TRACKING
+        function animateCrystal() {
+            if (crystal) {
+                crystal.rotation.y += 0.01;
+                crystal.rotation.x += 0.005;
+                points.rotation.y -= 0.002;
+                
+                // Rangni vaqtga qarab o'zgartirish (Rainbow effect)
+                const hue = Date.now() * 0.0001 % 1;
+                crystal.material.color.setHSL(hue, 1, 0.5);
+                crystal.material.emissive.setHSL(hue, 1, 0.5);
+            }
+            renderer.render(scene, camera3d);
+            if(camActive) requestAnimationFrame(animateCrystal);
+        }
+
+        // --- HAND TRACKING ---
         const hands = new Hands({locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`});
-        hands.setOptions({ maxNumHands: 1, minDetectionConfidence: 0.6 });
+        hands.setOptions({ maxNumHands: 1, minDetectionConfidence: 0.7 });
+        
         hands.onResults(res => {
             if (res.multiHandLandmarks && res.multiHandLandmarks.length > 0) {
                 const lm = res.multiHandLandmarks[0];
-                stars.rotation.y = (lm[8].x - 0.5) * 2;
-                const dist = Math.sqrt(Math.pow(lm[4].x-lm[20].x, 2) + Math.pow(lm[4].y-lm[20].y, 2));
-                stars.userData.speed = dist * 10;
+                document.getElementById('cam-status').innerText = "SYSTEM: CONNECTED";
+                document.getElementById('cam-status').style.color = "#0f0";
+                
+                // Kristalni qo'l harakatiga qarab aylantirish va kattalashtirish
+                crystal.rotation.z = lm[8].x * 5;
+                const scale = 1 + (1 - lm[8].y);
+                crystal.scale.set(scale, scale, scale);
+            } else {
+                document.getElementById('cam-status').innerText = "Qo'lingizni ko'rsating...";
+                document.getElementById('cam-status').style.color = "#fff";
             }
         });
 
-        const camera = new Camera(document.getElementById('input_video'), {
-            onFrame: async () => { await hands.send({image: document.getElementById('input_video')}); }
+        const camControl = new Camera(document.getElementById('input_video'), {
+            onFrame: async () => { await hands.send({image: document.getElementById('input_video')}); },
+            width: 480, height: 360
         });
 
-        // NAVIGATSIYA
+        // --- NAVIGATSIYA ---
         function movePage(s) {
             let curr = document.querySelector('.page.active');
             let n = parseInt(curr.id.replace('p', '')) + s;
             if(n<1 || n>4) return;
             curr.classList.remove('active'); document.getElementById('p'+n).classList.add('active');
+            
             document.getElementById('prevBtn').style.display = (n==1)?'none':'block';
             document.getElementById('nextBtn').style.display = (n==4)?'none':'block';
+
             if(n === 4) {
                 document.getElementById('canvas-3d').style.display = 'block';
-                if(!camActive) { initKoinot(); camera.start(); camActive = true; animateKoinot(); }
-            } else { document.getElementById('canvas-3d').style.display = 'none'; }
+                if(!camActive) {
+                    initCrystalEffect();
+                    camControl.start().then(() => {
+                        camActive = true;
+                        animateCrystal();
+                    });
+                }
+            } else {
+                document.getElementById('canvas-3d').style.display = 'none';
+            }
         }
 
         setInterval(() => { document.getElementById('big-time').innerText = new Date().toLocaleTimeString(); }, 1000);
