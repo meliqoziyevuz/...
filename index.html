@@ -33,6 +33,19 @@
         .card { width: 260px; padding: 10px; margin: 6px 0; border-radius: 10px; text-decoration: none; color: #fff; font-weight: bold; display: flex; align-items: center; background: rgba(0, 255, 0, 0.1); border: 1px solid #0f0; transition: 0.3s; font-size: 14px; }
         input, textarea { width: 100%; padding: 10px; margin: 5px 0; background: #000; border: 1px solid #0f0; color: #fff; border-radius: 5px; outline: none; }
         .send-btn { width: 100%; padding: 10px; background: #0f0; border: none; font-weight: bold; cursor: pointer; border-radius: 5px; color: #000; margin-top: 5px; }
+        
+        /* Yangi qo'shilgan: Muvaffaqiyat xabari stili */
+        #success-msg { 
+            display: none; 
+            color: #0f0; 
+            font-family: monospace; 
+            border: 1px solid #0f0; 
+            padding: 20px; 
+            background: rgba(0,0,0,0.85); 
+            border-radius: 15px; 
+            box-shadow: 0 0 15px #0f0; 
+            max-width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -73,10 +86,14 @@
         </div>
 
         <div class="page" id="p3">
-            <div class="cyber-panel" data-label="Contact Me">
+            <div class="cyber-panel" id="contact-panel" data-label="Contact Me">
                 <input type="text" id="uName" placeholder="Ismingiz">
                 <textarea id="uMsg" placeholder="Xabaringiz..."></textarea>
                 <button class="send-btn" onclick="sendMsg()">YUBORISH</button>
+            </div>
+            <div id="success-msg">
+                <i class="fas fa-check-circle" style="font-size:40px; margin-bottom:10px;"></i>
+                <p style="letter-spacing:2px;">XABARINGIZ QABUL QILINDI! ✅</p>
             </div>
         </div>
 
@@ -98,18 +115,29 @@
         function toggleVideo() { if (video.paused) { stopAudio(); video.play(); playBtn.innerHTML = '<i class="fas fa-pause"></i>'; } else { video.pause(); playBtn.innerHTML = '<i class="fas fa-play"></i>'; } }
         function changeVideo(dir) { currentVid = (currentVid + dir + videos.length) % videos.length; video.pause(); videoSrc.src = videos[currentVid]; video.load(); toggleVideo(); }
         
+        // 3-BO'LIM: TELEGRAM XABAR YUBORISH (Yo'qoladigan variant)
         function sendMsg() {
             const name = document.getElementById('uName').value;
             const msg = document.getElementById('uMsg').value;
             const token = "7725172926:AAHaVKSy6J-oaQnBSYy5bGKqSKIr-UQrOIM"; 
             const chat_id = "6804374367"; 
+
             if(!name || !msg) { alert("Iltimos, to'liq to'ldiring!"); return; }
+
             const text = `🚀 Saytdan xabar!\n👤 Ism: ${name}\n💬 Xabar: ${msg}`;
-            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(text)}`).then(res => {
-                if(res.ok) { alert("Xabar Telegramga ketdi! ✅"); }
-            });
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(text)}`;
+
+            fetch(url).then(res => {
+                if(res.ok) { 
+                    // Yozuvlarni yo'qotish va muvaffaqiyat xabarini chiqarish
+                    document.getElementById('contact-panel').style.display = 'none';
+                    document.getElementById('success-msg').style.display = 'block';
+                }
+                else { alert("Xatolik! ❌"); }
+            }).catch(err => alert("Internet bilan muammo! ❌"));
         }
 
+        // Qor effekti
         const sCanvas = document.getElementById('snow-canvas');
         const sCtx = sCanvas.getContext('2d');
         sCanvas.width = window.innerWidth; sCanvas.height = window.innerHeight;
@@ -120,21 +148,17 @@
         drawSnow();
         setInterval(() => { document.getElementById('big-time').innerText = new Date().toLocaleTimeString('uz-UZ', {hour12:false}); }, 1000);
 
-        // --- 4-BO'LIM: SUPER REALISTIK KOINOT ---
+        // 4-BO'LIM: REALISTIK SOLAR SYSTEM (Sen xohlagandek)
         let scene, camera3d, renderer, solarGroup, starsGroup, camActive = false;
         let planets = [];
         let targetScale = 1; let currentScale = 1;
 
         function initSolarSystem() {
             scene = new THREE.Scene();
-            
-            // Yulduzlar to'dasi (Harakatlanuvchi)
             starsGroup = new THREE.Group();
             const starGeo = new THREE.BufferGeometry();
             const starCoords = [];
-            for(let i=0; i<10000; i++) {
-                starCoords.push((Math.random()-0.5)*3000, (Math.random()-0.5)*3000, (Math.random()-0.5)*3000);
-            }
+            for(let i=0; i<10000; i++) { starCoords.push((Math.random()-0.5)*3000, (Math.random()-0.5)*3000, (Math.random()-0.5)*3000); }
             starGeo.setAttribute('position', new THREE.Float32BufferAttribute(starCoords, 3));
             starsGroup.add(new THREE.Points(starGeo, new THREE.PointsMaterial({color: 0xffffff, size: 0.7, transparent: true, opacity: 0.8})));
             scene.add(starsGroup);
@@ -150,16 +174,10 @@
 
             solarGroup = new THREE.Group(); scene.add(solarGroup);
 
-            // Quyosh (Olovli Glow effektli)
             const sunGroup = new THREE.Group();
             const sunCore = new THREE.Mesh(new THREE.SphereGeometry(8, 64, 64), new THREE.MeshBasicMaterial({ color: 0xfff500 }));
             sunGroup.add(sunCore);
-            for(let i=1; i<=3; i++) {
-                sunGroup.add(new THREE.Mesh(
-                    new THREE.SphereGeometry(8 + (i*1.5), 64, 64),
-                    new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.4/i, side: THREE.BackSide })
-                ));
-            }
+            for(let i=1; i<=3; i++) { sunGroup.add(new THREE.Mesh(new THREE.SphereGeometry(8 + (i*1.5), 64, 64), new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.4/i, side: THREE.BackSide }))); }
             solarGroup.add(sunGroup);
 
             const sunLight = new THREE.PointLight(0xffffff, 4, 1000);
@@ -181,20 +199,11 @@
 
             pData.forEach(p => {
                 const pGroup = new THREE.Group();
-                const mesh = new THREE.Mesh(
-                    new THREE.SphereGeometry(p.size, 64, 64),
-                    new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.7, metalness: 0.2, emissive: p.color, emissiveIntensity: 0.05 })
-                );
+                const mesh = new THREE.Mesh(new THREE.SphereGeometry(p.size, 64, 64), new THREE.MeshStandardMaterial({ color: p.color, roughness: 0.7, metalness: 0.2, emissive: p.color, emissiveIntensity: 0.05 }));
                 mesh.position.x = p.dist; mesh.castShadow = true; mesh.receiveShadow = true;
                 pGroup.add(mesh);
-
-                if(p.ring) {
-                    const ring = new THREE.Mesh(new THREE.RingGeometry(p.size + 1.5, p.size + 5, 128), new THREE.MeshStandardMaterial({ color: p.color, side: THREE.DoubleSide, transparent: true, opacity: 0.4 }));
-                    ring.position.x = p.dist; ring.rotation.x = Math.PI/2.3; pGroup.add(ring);
-                }
-
-                const orbit = new THREE.Mesh(new THREE.TorusGeometry(p.dist, 0.04, 16, 200), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.1 }));
-                orbit.rotation.x = Math.PI/2; solarGroup.add(orbit);
+                if(p.ring) { const ring = new THREE.Mesh(new THREE.RingGeometry(p.size + 1.5, p.size + 5, 128), new THREE.MeshStandardMaterial({ color: p.color, side: THREE.DoubleSide, transparent: true, opacity: 0.4 })); ring.position.x = p.dist; ring.rotation.x = Math.PI/2.3; pGroup.add(ring); }
+                const orbit = new THREE.Mesh(new THREE.TorusGeometry(p.dist, 0.04, 16, 200), new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.1 })); orbit.rotation.x = Math.PI/2; solarGroup.add(orbit);
                 solarGroup.add(pGroup);
                 planets.push({ group: pGroup, mesh: mesh, speed: p.speed, rot: p.rot });
             });
@@ -212,10 +221,7 @@
             }
         });
 
-        const camAI = new Camera(document.getElementById('input_video'), { 
-            onFrame: async () => { await hands.send({image: document.getElementById('input_video')}); }, 
-            width: 640, height: 480 
-        });
+        const camAI = new Camera(document.getElementById('input_video'), { onFrame: async () => { await hands.send({image: document.getElementById('input_video')}); }, width: 640, height: 480 });
 
         function animateSolar() {
             if(!camActive) return;
@@ -223,11 +229,8 @@
             currentScale += (targetScale - currentScale) * 0.05;
             solarGroup.scale.set(currentScale, currentScale, currentScale);
             planets.forEach(p => { p.group.rotation.y += p.speed; p.mesh.rotation.y += p.rot; });
-            
-            // Yulduzlar harakati
             starsGroup.rotation.y += 0.0002;
             starsGroup.rotation.x += 0.0001;
-
             renderer.render(scene, camera3d);
         }
 
